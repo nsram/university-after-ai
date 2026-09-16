@@ -11,7 +11,7 @@ Once GitHub Pages is enabled for the repository, the presentation will be availa
 
 `https://nsram.github.io/university-after-ai/`
 
-The deck uses a fixed 1600 × 900 slide canvas that scales uniformly for landscape viewing on phones, tablets, and laptops. Use the left/right arrow keys, tap the screen edges, or swipe on touch devices. Press `F` for fullscreen on supported browsers.
+The deck uses a fixed 1600 × 900 slide canvas that scales uniformly for landscape viewing on phones, tablets, and laptops. Use the left/right arrow keys, tap the screen edges, or swipe on touch devices. The footer links return to the start or jump to the end of the main talk; slide 63 links onward to the appendix. Press `Home` for the first slide, `End` for the final appendix slide, and `F` for fullscreen on supported browsers.
 
 ## Files
 
