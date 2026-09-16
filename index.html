@@ -239,16 +239,20 @@
   }
 
   #deck {
-    padding: 24px;
+    padding: 0;
     background: var(--surround);
   }
 
   #stage {
+    position: absolute;
+    left: 50%;
+    top: 50%;
     width: 1600px;
     height: 900px;
     flex: 0 0 auto;
-    transform: scale(var(--deck-scale, 1));
+    transform: translate(-50%, -50%) scale(var(--deck-scale, 1));
     transform-origin: center center;
+    touch-action: none;
     background: var(--bg);
     box-shadow: 0 24px 72px var(--shadow), 0 0 0 1px rgba(255,255,255,.16);
     --u: 24px;
@@ -617,6 +621,13 @@
   .deck-jump:hover, .deck-jump:focus-visible { color: var(--accent2); text-decoration: underline; text-underline-offset: 4px; }
   .deck-jump:focus-visible, .appendix-link:focus-visible { outline: 2px solid var(--accent2); outline-offset: 3px; }
   .deck-jump[hidden] { display: none; }
+
+  @media (max-height: 500px) and (orientation: landscape) {
+    .deck-jump { bottom: max(4px, env(safe-area-inset-bottom)); min-width: 84px; font-size: 16px; }
+    .deck-jump-start { left: max(16px, env(safe-area-inset-left)); }
+    .deck-jump-end { right: max(16px, env(safe-area-inset-right)); }
+    #hud { bottom: max(15px, env(safe-area-inset-bottom)); font-size: 16px; }
+  }
 
   .appendix-link {
     margin-top: 12px;
@@ -1337,10 +1348,11 @@
   <p>What should alumni fund first?</p>
 </div><div class="pagenum">72</div></section>
 
+</div>
 <button class="deck-jump deck-jump-start" id="jump-start" type="button" aria-label="Go to the first slide">Start</button>
 <div id="hud"><span id="pos">1</span> / <span id="total">72</span></div>
 <button class="deck-jump deck-jump-end" id="jump-end" type="button" aria-label="Go to the end of the main talk">End</button>
-</div></div>
+</div>
 <script>
 (function() {
   const slides = [...document.querySelectorAll('.slide')];
@@ -1354,9 +1366,11 @@
   let i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.replace(/\D/g,''), 10) || 1) - 1));
 
   function setUnit() {
-    const gutter = (window.innerWidth > 760 && window.innerHeight > 480) ? 24 : 0;
-    const availableWidth = Math.max(320, window.innerWidth - gutter * 2);
-    const availableHeight = Math.max(180, window.innerHeight - gutter * 2);
+    const viewportWidth = window.visualViewport?.width || window.innerWidth;
+    const viewportHeight = window.visualViewport?.height || window.innerHeight;
+    const gutter = (viewportWidth > 760 && viewportHeight > 500) ? 24 : 8;
+    const availableWidth = Math.max(320, viewportWidth - gutter * 2);
+    const availableHeight = Math.max(180, viewportHeight - gutter * 2);
     const scale = Math.min(availableWidth / 1600, availableHeight / 900);
     stage.style.setProperty('--deck-scale', String(scale));
     fitSlide();
@@ -1389,6 +1403,7 @@
 
   window.addEventListener('resize', setUnit);
   window.addEventListener('orientationchange', () => setTimeout(setUnit, 220));
+  window.visualViewport?.addEventListener('resize', setUnit);
   window.addEventListener('keydown', (e) => {
     const k = e.key;
     if (k === 'ArrowRight' || k === 'PageDown' || k === ' ') { e.preventDefault(); show(i + 1); }
