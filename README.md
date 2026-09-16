@@ -18,6 +18,7 @@ The deck uses a fixed 1600 × 900 slide canvas that scales uniformly for landsca
 - `index.html` — complete self-contained presentation
 - `.nojekyll` — tells GitHub Pages to serve the site as-is
 - `favicon.svg`, `favicon.ico`, `apple-touch-icon.png` — site icons
+- `assets/` — presentation images and their local copies
 - `CONTRIBUTING.md` — lightweight contribution guidance
 - `CREDITS.md` — authorship, source, and AI-assistance credits
 - `.github/ISSUE_TEMPLATE/` — simple issue templates for content and display problems

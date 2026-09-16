@@ -7,3 +7,7 @@ This presentation draws on Jason Potts, *The University after AI* (Version 0.1, 
 ## AI assistance
 
 ChatGPT (OpenAI) and Grok (xAI) were used as collaborative tools for critique, restructuring, language refinement, and presentation development. The argument, selection of ideas, and final editorial judgments are the author's.
+
+## Image credit
+
+Laurentius de Voltolina, *Liber ethicorum des Henricus de Alemannia*, second half of the 14th century, Kupferstichkabinett Berlin. Public-domain image via Wikimedia Commons.
