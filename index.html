@@ -484,6 +484,8 @@
   }
   .triad > div:nth-child(2) { border-left-color: var(--accent2); }
   .triad > div:nth-child(3) { border-left-color: var(--fg); }
+  #s27 .triad > div:nth-child(2) h3 { color: var(--accent2); }
+  #s27 .triad > div:nth-child(3) h3 { color: var(--fg); }
   .triad p { font-size: calc(27px * var(--fit)); color: var(--muted); line-height: 1.38; }
 
   .doorway { max-width: 1320px; width: 100%; gap: 32px; margin-top: 24px; }
@@ -1337,9 +1339,8 @@
 
 <button class="deck-jump deck-jump-start" id="jump-start" type="button" aria-label="Go to the first slide">Start</button>
 <div id="hud"><span id="pos">1</span> / <span id="total">72</span></div>
-<button class="deck-jump deck-jump-end" id="jump-main-end" type="button" aria-label="Go to the end of the main talk">Main end</button>
+<button class="deck-jump deck-jump-end" id="jump-end" type="button" aria-label="Go to the end of the main talk">End</button>
 </div></div>
-<div class="tap left" aria-hidden="true"></div><div class="tap right" aria-hidden="true"></div>
 <script>
 (function() {
   const slides = [...document.querySelectorAll('.slide')];
@@ -1347,9 +1348,8 @@
   const pos = document.getElementById('pos');
   const total = document.getElementById('total');
   const jumpStart = document.getElementById('jump-start');
-  const jumpMainEnd = document.getElementById('jump-main-end');
+  const jumpEnd = document.getElementById('jump-end');
   const continueAppendix = document.getElementById('continue-appendix');
-  const taps = { left: document.querySelector('.tap.left'), right: document.querySelector('.tap.right') };
   total.textContent = slides.length;
   let i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.replace(/\D/g,''), 10) || 1) - 1));
 
@@ -1382,7 +1382,7 @@
     slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
     pos.textContent = String(i + 1);
     jumpStart.hidden = i === 0;
-    jumpMainEnd.hidden = i === 62;
+    jumpEnd.hidden = i === 62;
     history.replaceState(null, '', '#' + (i + 1));
     fitSlide();
   }
@@ -1401,7 +1401,7 @@
     }
   });
 
-  let tx = null, ty = null;
+  let tx = null, ty = null, suppressEdgeClick = false;
   stage.addEventListener('touchstart', e => {
     tx = e.changedTouches[0].clientX; ty = e.changedTouches[0].clientY;
   }, {passive:true});
@@ -1410,12 +1410,22 @@
     const dx = e.changedTouches[0].clientX - tx;
     const dy = e.changedTouches[0].clientY - ty;
     tx = ty = null;
-    if (Math.abs(dx) > 38 && Math.abs(dx) > Math.abs(dy)) show(i + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) > 38 && Math.abs(dx) > Math.abs(dy)) {
+      suppressEdgeClick = true;
+      setTimeout(() => { suppressEdgeClick = false; }, 450);
+      show(i + (dx < 0 ? 1 : -1));
+    }
   }, {passive:true});
-  taps.left.addEventListener('click', () => show(i - 1));
-  taps.right.addEventListener('click', () => show(i + 1));
+  stage.addEventListener('click', (e) => {
+    if (suppressEdgeClick) return;
+    if (e.target.closest('button, a')) return;
+    const rect = stage.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    if (x < rect.width * 0.13) show(i - 1);
+    else if (x > rect.width * 0.87) show(i + 1);
+  });
   jumpStart.addEventListener('click', (e) => { e.stopPropagation(); show(0); });
-  jumpMainEnd.addEventListener('click', (e) => { e.stopPropagation(); show(62); });
+  jumpEnd.addEventListener('click', (e) => { e.stopPropagation(); show(62); });
   continueAppendix.addEventListener('click', (e) => { e.stopPropagation(); show(63); });
 
   setUnit();
