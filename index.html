@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>A New Foundation for the University — v3.3</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="icon" href="favicon.ico" sizes="any"/>
+<link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+<style>
+  :root {
+    --bg: #111923;
+    --fg: #f7f1e4;
+    --muted: #c7bdab;
+    --soft: #9fb6a8;
+    --accent: #d7a84f;
+    --accent2: #78a6b8;
+    --card: rgba(255,255,255,0.075);
+    --card2: rgba(215,168,79,0.13);
+    --line: rgba(247,241,228,0.20);
+    --shadow: rgba(0,0,0,0.45);
+    --u: 18px;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%; background: #050607; color: var(--fg);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
+  }
+  #deck {
+    position: fixed; inset: 0;
+    display: grid; place-items: center;
+    background: radial-gradient(circle at 50% 20%, #1f2b36 0%, #050607 68%);
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  #stage {
+    position: relative;
+    width: min(100vw, calc(100svh * 16 / 9));
+    height: min(100svh, calc(100vw * 9 / 16));
+    background:
+      radial-gradient(circle at 16% 10%, rgba(215,168,79,0.10), transparent 34%),
+      radial-gradient(circle at 86% 80%, rgba(120,166,184,0.12), transparent 38%),
+      linear-gradient(135deg, #121b25 0%, #0c131c 100%);
+    overflow: hidden;
+    box-shadow: 0 20px 60px var(--shadow), 0 0 0 1px rgba(255,255,255,0.08);
+  }
+  #stage::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: .35;
+    pointer-events: none;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    display: none;
+    padding: 5.2% 6.2% 5.4%;
+    --fit: 1;
+  }
+  .slide.active { display: block; }
+  .slide::after {
+    content: "";
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 0.55%; min-width: 5px;
+    background: linear-gradient(var(--accent), rgba(215,168,79,0.15));
+    opacity: .75;
+  }
+  .content {
+    position: relative; z-index: 1;
+    height: 100%; width: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+    gap: calc(var(--u) * 0.52 * var(--fit));
+  }
+  .slide-title .content { text-align: center; align-items: center; gap: calc(var(--u) * 0.45 * var(--fit)); }
+  .slide-title::after { display: none; }
+  h1, h2, h3 {
+    text-wrap: balance;
+    font-family: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+    margin: 0; font-weight: 660; letter-spacing: -0.025em;
+  }
+  h1 { font-size: calc(var(--u) * 3.1 * var(--fit)); line-height: 1.05; max-width: 11.5em; }
+  h2 { font-size: calc(var(--u) * 2.15 * var(--fit)); line-height: 1.08; margin-bottom: calc(var(--u) * .15 * var(--fit)); max-width: 16em; }
+  h3 { font-size: calc(var(--u) * 1.08 * var(--fit)); line-height: 1.1; color: var(--accent); letter-spacing: 0; }
+  p, li {
+    font-size: calc(var(--u) * 1.13 * var(--fit));
+    line-height: 1.34; margin: 0; max-width: 40em;
+  }
+  .subtitle { font-size: calc(var(--u) * 1.34 * var(--fit)); color: var(--muted); max-width: 22em; text-wrap: balance; }
+  .author { font-size: calc(var(--u) * 1.22 * var(--fit)); margin-top: calc(var(--u) * .75); color: #fff7e6; }
+  .credit { font-size: calc(var(--u) * 0.74 * var(--fit)); color: var(--muted); max-width: 52em; }
+  .url { font-size: calc(var(--u) * 0.72 * var(--fit)); color: var(--muted); word-break: break-word; }
+  .url a { color: var(--accent); text-decoration: none; }
+  .bigline, .punch { font-size: calc(var(--u) * 1.62 * var(--fit)); line-height: 1.16; font-weight: 720; color: #fff7e6; max-width: 24em; text-wrap: balance; }
+  .punch { margin-top: calc(var(--u) * .6); }
+  .thesis { font-size: calc(var(--u) * 1.5 * var(--fit)); line-height: 1.28; max-width: 24em; }
+  .small { font-size: calc(var(--u) * .85 * var(--fit)); color: var(--muted); max-width: 46em; }
+  ul.clean { list-style: none; padding: 0; margin: 0; display: grid; gap: calc(var(--u) * .32 * var(--fit)); }
+  ul.clean li::before { content: "•"; color: var(--accent); margin-right: .55em; }
+  .artifacts { list-style: none; padding: 0; margin: calc(var(--u) * .3) 0 0; display: grid; gap: calc(var(--u) * .36); }
+  .artifacts li { font-size: calc(var(--u) * 1.42 * var(--fit)); }
+  .artifact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: calc(var(--u) * .65); width: min(100%, 44em); margin-top: calc(var(--u) * .25); }
+  .artifact-grid div, .tile, .card {
+    border: 1px solid var(--line); background: var(--card);
+    border-radius: calc(var(--u) * .65); padding: calc(var(--u) * .72);
+    box-shadow: 0 10px 28px rgba(0,0,0,.12);
+  }
+  .artifact-grid div { text-align: center; min-height: calc(var(--u) * 4.2); display: grid; place-items: center; color: #fff7e6; font-weight: 650; font-size: calc(var(--u) * 1.05 * var(--fit)); }
+  .two-col { display: grid; grid-template-columns: 1.05fr .95fr; gap: calc(var(--u) * 1.1); align-items: center; width: 100%; }
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(var(--u) * .7); width: 100%; }
+  .card p, .tile p { font-size: calc(var(--u) * .95 * var(--fit)); color: var(--muted); line-height: 1.35; }
+  .mini { color: var(--muted); font-size: calc(var(--u) * .92 * var(--fit)); }
+  .diagram { width: 100%; margin-top: calc(var(--u) * .45); }
+  .flow { display: flex; align-items: stretch; gap: calc(var(--u) * .42); }
+  .flow .box { flex: 1; border: 1px solid var(--line); background: var(--card); border-radius: calc(var(--u) * .55); padding: calc(var(--u) * .65); min-height: calc(var(--u) * 3.9); display: flex; flex-direction: column; justify-content: center; }
+  .flow .box strong { display: block; color: #fff7e6; font-size: calc(var(--u) * .95 * var(--fit)); }
+  .flow .box span { color: var(--muted); font-size: calc(var(--u) * .78 * var(--fit)); line-height: 1.25; }
+  .arrow { align-self: center; color: var(--accent); font-size: calc(var(--u) * 1.3 * var(--fit)); opacity: .95; }
+  .timeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: calc(var(--u) * .34); margin-top: calc(var(--u) * .6); }
+  .timeline .box { border: 1px solid var(--line); background: var(--card); border-radius: calc(var(--u) * .5); padding: calc(var(--u) * .55); min-height: calc(var(--u) * 4.3); }
+  .timeline strong { display:block; color: var(--accent); font-size: calc(var(--u) * .82 * var(--fit)); margin-bottom: .25em; }
+  .timeline span { font-size: calc(var(--u) * .72 * var(--fit)); color: var(--muted); line-height: 1.25; display:block; }
+  .triad { display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(var(--u) * .75); margin-top: calc(var(--u) * .35); }
+  .triad > div { border: 1px solid var(--line); background: linear-gradient(180deg, var(--card2), var(--card)); border-radius: calc(var(--u) * .7); padding: calc(var(--u) * .85); min-height: calc(var(--u) * 6.4); }
+  .triad p { color: var(--muted); font-size: calc(var(--u) * .92 * var(--fit)); }
+  .doorway { display: grid; grid-template-columns: 1fr auto 1fr; gap: calc(var(--u) * .45); align-items: center; margin-top: calc(var(--u) * .5); max-width: 48em; }
+  .doorway .left, .doorway .right { display: grid; gap: calc(var(--u) * .28); }
+  .doorway .pair { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: .55em; font-size: calc(var(--u) * .92 * var(--fit)); color: var(--muted); }
+  .doorway .bar { color: var(--accent); font-size: calc(var(--u) * 1.2 * var(--fit)); }
+  .continuum { display: grid; grid-template-columns: repeat(4, 1fr); gap: calc(var(--u) * .28); margin-top: calc(var(--u) * .6); }
+  .continuum .step { border-top: 3px solid var(--accent); background: var(--card); padding: calc(var(--u) * .55); border-radius: 0 0 calc(var(--u) * .5) calc(var(--u) * .5); font-size: calc(var(--u) * .8 * var(--fit)); color: var(--muted); min-height: calc(var(--u) * 3.8); }
+  .edge { display:grid; grid-template-columns: 1fr .7fr 1fr; gap: calc(var(--u) * .5); align-items:center; width:min(100%,45em); margin-top:calc(var(--u)*.5); }
+  .edge .circle { border:1px solid var(--line); background:var(--card); border-radius: calc(var(--u)*.7); padding:calc(var(--u)*.8); text-align:center; }
+  .edge .circle strong { display:block; color:#fff7e6; font-size:calc(var(--u)*.95*var(--fit)); }
+  .edge .circle span { color:var(--muted); font-size:calc(var(--u)*.78*var(--fit)); }
+  .edge .arrowline { height:2px; background:linear-gradient(90deg,var(--accent),var(--accent2)); position:relative; }
+  .edge .arrowline::after { content:""; position:absolute; right:-1px; top:-5px; width:0; height:0; border-left:9px solid var(--accent2); border-top:6px solid transparent; border-bottom:6px solid transparent; }
+  .split-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: calc(var(--u) * .45) calc(var(--u) * .9); margin-top: calc(var(--u) * .4); }
+  .split-list p { font-size: calc(var(--u) * .98 * var(--fit)); color: var(--muted); }
+  .pagenum { position: absolute; right: 3.1%; bottom: 3.1%; color: rgba(247,241,228,.55); font: 600 calc(var(--u) * .62)/1 ui-sans-serif, system-ui; z-index: 2; }
+  .section-kicker { color: var(--accent); text-transform: uppercase; letter-spacing: .08em; font-size: calc(var(--u) * .72 * var(--fit)); font-weight: 750; margin-bottom: calc(var(--u) * .18); }
+  .slide-stop .content, .slide-sources .content { text-align: center; align-items:center; }
+  .slide-stop h2 { max-width:none; }
+  .appendix h2 { font-size: calc(var(--u) * 1.8 * var(--fit)); }
+  .appendix p { font-size: calc(var(--u) * .96 * var(--fit)); }
+  #hud { position: fixed; left: 50%; bottom: max(8px, env(safe-area-inset-bottom)); transform: translateX(-50%); font: 600 12px/1.2 ui-sans-serif, system-ui; color: rgba(255,255,255,.76); background: rgba(0,0,0,.46); padding: 6px 11px; border-radius: 999px; z-index: 30; user-select: none; backdrop-filter: blur(8px); }
+  .tap { position: fixed; top: 0; bottom: 0; width: 22vw; z-index: 25; }
+  .tap.left { left: 0; } .tap.right { right: 0; }
+  #rotate { display: none; position: fixed; inset: 0; z-index: 40; background: #111923; color: var(--fg); place-items: center; text-align: center; padding: 2rem; font-family: ui-sans-serif, system-ui; }
+  #rotate strong { display: block; font-size: 1.3rem; margin-bottom: 0.45rem; color:#fff7e6; }
+  #rotate span { color: var(--muted); }
+  @media (orientation: portrait) and (max-width: 900px) { #rotate { display: grid; } }
+  @media (max-height: 430px) and (orientation: landscape) {
+    .slide { padding: 4.2% 5.5% 4.9%; }
+    .pagenum { bottom: 2.4%; right: 2.6%; }
+    #hud { opacity: .36; }
+  }
+  @media (max-width: 760px) and (orientation: landscape) {
+    .artifact-grid { grid-template-columns: repeat(2, 1fr); }
+    .three-col, .triad { gap: calc(var(--u) * .45); }
+  }
+  @media print {
+    html, body { overflow: visible; background: white; }
+    #deck { position: static; display:block; background:white; padding:0; }
+    #stage { width: 100vw; height: auto; box-shadow:none; }
+    .slide { position: relative; display:block; width:100vw; height:56.25vw; page-break-after:always; }
+    .tap, #hud, #rotate { display:none !important; }
+  }
+</style>
+</head>
+<body>
+<div id="rotate"><div><strong>Rotate to landscape</strong><span>This deck is designed as a 16:9 landscape talk for phone, tablet, and laptop.</span></div></div>
+<div id="deck"><div id="stage">
+
+<section class="slide slide-title" data-index="0" id="s1" aria-label="Slide 1"><div class="content">
+  <h1>A New Foundation for the University</h1>
+  <p class="subtitle">Learning, judgment, and trust after AI</p>
+  <p class="author">Sriram Natarajan</p>
+  <p class="credit">Drawing on Jason Potts, <em>The University after AI</em>.</p>
+  <p class="credit">Developed with assistance from ChatGPT and Grok.</p>
+  <p class="credit">Sources and speaker notes in the companion file.</p>
+</div><div class="pagenum">1</div></section>
+
+<section class="slide" data-index="1" id="s2" aria-label="Slide 2"><div class="content">
+  <h2>Who did this work?</h2>
+  <div class="artifact-grid"><div>Polished essay</div><div>Clean program</div><div>Sharp analysis</div><div>Striking design</div></div>
+  <p class="punch">Who actually did this work?</p>
+</div><div class="pagenum">2</div></section>
+
+<section class="slide" data-index="2" id="s3" aria-label="Slide 3"><div class="content">
+  <h2>A new gap</h2>
+  <p>AI can be an extraordinarily patient tutor.</p>
+  <p>It can also produce a polished submission for a student who has learned very little.</p>
+  <p class="bigline">Use AI to learn. Demand stronger evidence.</p>
+</div><div class="pagenum">3</div></section>
+
+<section class="slide" data-index="3" id="s4" aria-label="Slide 4"><div class="content">
+  <h2>The thesis</h2>
+  <p class="thesis">As instruction and polished output become abundant, universities become more valuable where they can provide credible proof, valuable peers, real practice, and trusted judgment.</p>
+</div><div class="pagenum">4</div></section>
+
+<section class="slide" data-index="4" id="s5" aria-label="Slide 5"><div class="content">
+  <h2>AI reaches farther</h2>
+  <p>A university can tolerate cheap books and cheap lectures.</p>
+  <p>It faces a harder problem when essays, programs, analyses, and reports can be produced without clearly revealing what the student knows.</p>
+  <p class="bigline">The evidence itself has changed.</p>
+</div><div class="pagenum">5</div></section>
+
+<section class="slide" data-index="5" id="s6" aria-label="Slide 6"><div class="content">
+  <p class="section-kicker">A short history of abundance</p>
+  <h2>Three questions</h2>
+  <p>Each technology wave changed the university differently.</p>
+  <div class="diagram flow"><div class="box"><strong>What became easier?</strong><span>Access, copying, search, explanation, production</span></div><div class="arrow">→</div><div class="box"><strong>What stayed difficult?</strong><span>Judgment, practice, peers, trusted certification</span></div><div class="arrow">→</div><div class="box"><strong>How did universities respond?</strong><span>Libraries, licensing, online layers, new institutions</span></div></div>
+</div><div class="pagenum">6</div></section>
+
+<section class="slide" data-index="6" id="s7" aria-label="Slide 7"><div class="content">
+  <h2>Print</h2>
+  <p>Printing made texts vastly easier to reproduce and circulate.</p>
+  <p>Universities responded with libraries, catalogs, curricula, and scholarly collections.</p>
+  <p>The degree still depended on selecting, teaching, examining, and certifying students.</p>
+</div><div class="pagenum">7</div></section>
+
+<section class="slide" data-index="7" id="s8" aria-label="Slide 8"><div class="content">
+  <h2>Knight Library</h2>
+  <p>A great library was once a serious academic technology.</p>
+  <p>The University of Oregon renamed its main library for the Knight family in 1988. Its expansion joined public funds with major private gifts.</p>
+  <p class="bigline">Philanthropy followed scarcity.</p>
+</div><div class="pagenum">8</div></section>
+
+<section class="slide" data-index="8" id="s9" aria-label="Slide 9"><div class="content">
+  <h2>Recorded teaching</h2>
+  <p>Radio, television, film, VHS, and other media allowed lectures to travel beyond the room.</p>
+  <p>Before broadband video, a specialized recording could be genuinely hard to obtain.</p>
+  <p>Libraries became media collections too.</p>
+</div><div class="pagenum">9</div></section>
+
+<section class="slide" data-index="9" id="s10" aria-label="Slide 10"><div class="content">
+  <h2>The university login</h2>
+  <p>The web made search feel free. Serious academic literature often remained expensive.</p>
+  <p>Campus libraries bought access to JSTOR, ScienceDirect, Scopus, Web of Science, IEEE Xplore, PsycINFO, LexisNexis, Westlaw, and more.</p>
+</div><div class="pagenum">10</div></section>
+
+<section class="slide" data-index="10" id="s11" aria-label="Slide 11"><div class="content">
+  <h2>Courses leave the campus</h2>
+  <p>Around 2012, Coursera, edX, and Udacity made elite-branded courses available worldwide.</p>
+  <p>Some predicted that campuses would be displaced.</p>
+  <p>Instead, online courses became another layer of education. Distribution moved faster than credentialing.</p>
+</div><div class="pagenum">11</div></section>
+
+<section class="slide" data-index="11" id="s12" aria-label="Slide 12"><div class="content">
+  <h2>Rock the JVM</h2>
+  <p>The internet also created narrow specialists.</p>
+  <p>A learner can go to Rock the JVM for serious Scala and JVM craft, or to similar shops for one difficult skill.</p>
+  <p>That is valuable. It is still a smaller claim than a degree.</p>
+</div><div class="pagenum">12</div></section>
+
+<section class="slide" data-index="12" id="s13" aria-label="Slide 13"><div class="content">
+  <h2>The pattern</h2>
+  <div class="timeline"><div class="box"><strong>Print</strong><span>Texts become easier to obtain</span></div><div class="box"><strong>Media</strong><span>Lectures travel beyond the room</span></div><div class="box"><strong>Databases</strong><span>Literature becomes searchable and licensed</span></div><div class="box"><strong>MOOCs</strong><span>Courses reach global audiences</span></div><div class="box"><strong>AI</strong><span>Explanation and production become abundant</span></div></div>
+  <p class="bigline">That last word changes the problem.</p>
+</div><div class="pagenum">13</div></section>
+
+<section class="slide" data-index="13" id="s14" aria-label="Slide 14"><div class="content">
+  <p class="section-kicker">When the artifact stops being enough</p>
+  <h2>The take-home artifact</h2>
+  <p>A polished essay once bundled several clues together.</p>
+  <p>The student probably read, synthesized, wrote, revised, and spent time wrestling with the material.</p>
+  <p>Those inferences are becoming weaker.</p>
+</div><div class="pagenum">14</div></section>
+
+<section class="slide" data-index="14" id="s15" aria-label="Slide 15"><div class="content">
+  <h2>One document, many histories</h2>
+  <p>The same polished essay might now come from deep independent work, a long conversation with a model, heavy AI drafting, or minimal understanding plus good prompting.</p>
+  <p class="bigline">The document alone cannot tell us enough.</p>
+</div><div class="pagenum">15</div></section>
+
+<section class="slide" data-index="15" id="s16" aria-label="Slide 16"><div class="content">
+  <h2>Keep the essay</h2>
+  <p>The essay may still teach.</p>
+  <p>Students can develop arguments, compare evidence, revise ideas, and receive feedback.</p>
+  <p>The narrower question is how much certification weight the final file should carry by itself.</p>
+</div><div class="pagenum">16</div></section>
+
+<section class="slide" data-index="16" id="s17" aria-label="Slide 17"><div class="content">
+  <h2>Add attribution</h2>
+  <p>After submission, ask:</p>
+  <div class="split-list"><p>Why this evidence?</p><p>What is the weakest part?</p><p>What would change your conclusion?</p><p>Apply the idea to a new case.</p></div>
+  <p>The conversation reveals what the PDF cannot.</p>
+</div><div class="pagenum">17</div></section>
+
+<section class="slide" data-index="17" id="s18" aria-label="Slide 18"><div class="content">
+  <h2>Computer science</h2>
+  <p>A repository can compile and pass every test without showing how much the student understands.</p>
+  <p>Open the code. Explain a function. Change one constraint. Predict what breaks. Repair it.</p>
+  <p>Now the code starts the assessment.</p>
+</div><div class="pagenum">18</div></section>
+
+<section class="slide" data-index="18" id="s19" aria-label="Slide 19"><div class="content">
+  <h2>Laboratory science</h2>
+  <p>A polished lab report is easy to improve after the experiment.</p>
+  <p>Capability is also visible in setup, instrument use, safety, anomaly detection, troubleshooting, and judgment about whether to repeat a result.</p>
+</div><div class="pagenum">19</div></section>
+
+<section class="slide" data-index="19" id="s20" aria-label="Slide 20"><div class="content">
+  <h2>Medicine and nursing</h2>
+  <p>Clinical competence is not just a written plan.</p>
+  <p>A patient changes. A medication has a risk. A family asks a hard question. A team must coordinate.</p>
+  <p>Simulation, supervised placement, and case defense show more than a report.</p>
+</div><div class="pagenum">20</div></section>
+
+<section class="slide" data-index="20" id="s21" aria-label="Slide 21"><div class="content">
+  <h2>Art, design, performance</h2>
+  <p>The final portfolio shows the result.</p>
+  <p>The process shows sketches, failed attempts, rehearsal, critique, material choices, and response to constraint.</p>
+  <p>Assessment can follow the work while it is still alive.</p>
+</div><div class="pagenum">21</div></section>
+
+<section class="slide" data-index="21" id="s22" aria-label="Slide 22"><div class="content">
+  <h2>The artifact becomes a doorway</h2>
+  <div class="doorway"><div class="left"><div class="pair"><span>Essay</span><b>→</b><span>conversation</span></div><div class="pair"><span>Code</span><b>→</b><span>modification</span></div><div class="pair"><span>Lab report</span><b>→</b><span>demonstration</span></div></div><div class="bar">│</div><div class="right"><div class="pair"><span>Portfolio</span><b>→</b><span>critique</span></div><div class="pair"><span>Clinical plan</span><b>→</b><span>changing case</span></div><div class="pair"><span>Thesis</span><b>→</b><span>defense</span></div></div></div>
+  <p>The work still matters. Its meaning grows when the student has to work with it again.</p>
+</div><div class="pagenum">22</div></section>
+
+<section class="slide" data-index="22" id="s23" aria-label="Slide 23"><div class="content">
+  <h2>Closed-book exams help</h2>
+  <p>A supervised exam can answer a useful question: can this person perform now, without outside assistance?</p>
+  <p>For some knowledge and problem-solving claims, that matters.</p>
+  <p>A degree usually claims more.</p>
+</div><div class="pagenum">23</div></section>
+
+<section class="slide" data-index="23" id="s24" aria-label="Slide 24"><div class="content">
+  <h2>Match evidence to the claim</h2>
+  <div class="split-list"><p>Knowledge recall may suit an exam.</p><p>Clinical judgment may require a simulation.</p><p>Programming may require live modification.</p><p>Design may require critique.</p><p>Research may require defense.</p><p>Teamwork may require observation over time.</p></div>
+</div><div class="pagenum">24</div></section>
+
+<section class="slide" data-index="24" id="s25" aria-label="Slide 25"><div class="content">
+  <h2>Fairness matters more now</h2>
+  <p>Observed assessment cannot become impressionistic assessment.</p>
+  <p>It needs clear criteria, calibrated examiners, attention to language and disability, protection against examiner variance, records of decisions, and appeals.</p>
+</div><div class="pagenum">25</div></section>
+
+<section class="slide" data-index="25" id="s26" aria-label="Slide 26"><div class="content">
+  <h2>Bologna callback</h2>
+  <p>Around 1088, Bologna grew from student initiative. Students gathered, set teaching goals, and paid teachers directly.</p>
+  <p>The early university already involved teaching, examination, and a trusted social arrangement.</p>
+  <p>AI makes that old core visible again.</p>
+</div><div class="pagenum">26</div></section>
+
+<section class="slide" data-index="26" id="s27" aria-label="Slide 27"><div class="content">
+  <p class="section-kicker">Base → Remix → Proof</p>
+  <h2>A different way to organize teaching</h2>
+  <div class="triad"><div><h3>Base</h3><p>course mind<br/>archive<br/>sequence</p></div><div><h3>Remix</h3><p>practice<br/>examples<br/>feedback</p></div><div><h3>Proof</h3><p>observed capability<br/>judgment<br/>appealability</p></div></div>
+</div><div class="pagenum">27</div></section>
+
+<section class="slide" data-index="27" id="s28" aria-label="Slide 28"><div class="content">
+  <h2>The base</h2>
+  <p>A strong course has a mind.</p>
+  <p>Someone decided what matters, what comes first, which examples illuminate the field, which misconceptions recur, and what students can ignore for now.</p>
+</div><div class="pagenum">28</div></section>
+
+<section class="slide" data-index="28" id="s29" aria-label="Slide 29"><div class="content">
+  <h2>Buried intellectual capital</h2>
+  <p>Universities already own lectures, demonstrations, problem sets, cases, notes, seminars, lab explanations, and student questions.</p>
+  <p>Much of it was built for a world where finding the right five minutes was difficult.</p>
+</div><div class="pagenum">29</div></section>
+
+<section class="slide" data-index="29" id="s30" aria-label="Slide 30"><div class="content">
+  <h2>The content may still be good</h2>
+  <p>A clear explanation of Fourier transforms may remain excellent years later.</p>
+  <p>A classic experiment may still be the right experiment.</p>
+  <p>A short segment inside an old lecture may be exactly what a student needs today.</p>
+</div><div class="pagenum">30</div></section>
+
+<section class="slide" data-index="30" id="s31" aria-label="Slide 31"><div class="content">
+  <h2>The playlist is the problem</h2>
+  <p>A forty-hour course no longer has to be consumed as forty consecutive hours.</p>
+  <p>Its concepts, examples, demonstrations, and explanations can become addressable pieces.</p>
+  <p>Students should meet the right part when they need it.</p>
+</div><div class="pagenum">31</div></section>
+
+<section class="slide" data-index="31" id="s32" aria-label="Slide 32"><div class="content">
+  <h2>NPTEL</h2>
+  <p>NPTEL is a vivid case.</p>
+  <p>The archive includes more than 70,000 hours of transcribed and subtitled video.</p>
+  <p>As an IIT Madras alumnus, I see both sides: the intellectual capital is enormous; the old playlist interface can hide it.</p>
+</div><div class="pagenum">32</div></section>
+
+<section class="slide" data-index="32" id="s33" aria-label="Slide 33"><div class="content">
+  <h2>Curate before automating</h2>
+  <p>Before a model remixes an archive, faculty can mark material as current, foundational, superseded, historically useful, optional, incorrect, or obsolete.</p>
+  <p>Curation protects the integrity of the base.</p>
+</div><div class="pagenum">33</div></section>
+
+<section class="slide" data-index="33" id="s34" aria-label="Slide 34"><div class="content">
+  <h2>Make the archive queryable</h2>
+  <p>A student asks why an eigenvalue matters here.</p>
+  <div class="diagram flow"><div class="box"><strong>Question</strong><span>student confusion</span></div><div class="arrow">→</div><div class="box"><strong>Retrieve</strong><span>professor's segment</span></div><div class="arrow">→</div><div class="box"><strong>Explain</strong><span>grounded answer</span></div><div class="arrow">→</div><div class="box"><strong>Practice</strong><span>new problems</span></div></div>
+  <p>The system points back to the professor, then creates practice around the idea.</p>
+</div><div class="pagenum">34</div></section>
+
+<section class="slide" data-index="34" id="s35" aria-label="Slide 35"><div class="content">
+  <h2>The next library may answer back</h2>
+  <p>A library once helped a learner locate a source.</p>
+  <p>An AI-mediated academic archive can help the learner question it, connect it, practice with it, and return to the source when needed.</p>
+  <p>Institutional memory becomes interactive.</p>
+</div><div class="pagenum">35</div></section>
+
+<section class="slide" data-index="35" id="s36" aria-label="Slide 36"><div class="content">
+  <h2>Remix</h2>
+  <p>Once the base is trustworthy, personalization becomes much cheaper.</p>
+  <p>One student needs a simpler example. Another needs a harder problem. Another needs a visual explanation. Another needs a prerequisite.</p>
+  <p>The course bends without losing its spine.</p>
+</div><div class="pagenum">36</div></section>
+
+<section class="slide" data-index="36" id="s37" aria-label="Slide 37"><div class="content">
+  <h2>Targeted renewal</h2>
+  <p>Faculty do not need to rerecord forty hours every few years.</p>
+  <p>They can replace an obsolete section, add a better example, record a difficult explanation, flag a recurring misconception, or rethink the sequence.</p>
+</div><div class="pagenum">37</div></section>
+
+<section class="slide" data-index="37" id="s38" aria-label="Slide 38"><div class="content">
+  <h2>Proof</h2>
+  <p>At some point the institution makes a consequential claim:</p>
+  <p class="bigline">This person can do the work.</p>
+  <p>AI can gather evidence and sharpen questions. Responsibility for the judgment remains identifiable and appealable.</p>
+</div><div class="pagenum">38</div></section>
+
+<section class="slide" data-index="38" id="s39" aria-label="Slide 39"><div class="content">
+  <h2>Where faculty time matters most</h2>
+  <p>AI can absorb much routine variation in explanation and practice.</p>
+  <p>Faculty attention becomes especially valuable in two places: shaping the course's intellectual architecture and making difficult judgments about capability.</p>
+</div><div class="pagenum">39</div></section>
+
+<section class="slide" data-index="39" id="s40" aria-label="Slide 40"><div class="content">
+  <p class="section-kicker">What becomes more valuable</p>
+  <h2>More than a course provider</h2>
+  <p>If excellent explanation becomes widely available, students still need things information alone does not supply:</p>
+  <div class="split-list"><p>people worth learning beside</p><p>practice with consequences</p><p>mentors and examiners</p><p>access to institutions and professions</p></div>
+</div><div class="pagenum">40</div></section>
+
+<section class="slide" data-index="40" id="s41" aria-label="Slide 41"><div class="content">
+  <h2>A cohort worth joining</h2>
+  <p>An AI tutor can know the textbook.</p>
+  <p>It cannot become the classmate who challenges you, joins your research group, introduces you to an employer, or starts a company with you years later.</p>
+</div><div class="pagenum">41</div></section>
+
+<section class="slide" data-index="41" id="s42" aria-label="Slide 42"><div class="content">
+  <h2>Cohorts need design</h2>
+  <p>A cohort is not everyone admitted in the same year.</p>
+  <p>Its value comes from repeated interaction: shared work, complementary abilities, intellectual friction, rituals, projects, and continuity into alumni life.</p>
+</div><div class="pagenum">42</div></section>
+
+<section class="slide" data-index="42" id="s43" aria-label="Slide 43"><div class="content">
+  <h2>Placement beside people</h2>
+  <p>Universities place people beside others they could not easily find alone.</p>
+  <p>Students find peers. Researchers find collaborators. Employers find talent. Funders find projects.</p>
+  <p class="bigline">When information is abundant, placement becomes more consequential.</p>
+</div><div class="pagenum">43</div></section>
+
+<section class="slide" data-index="43" id="s44" aria-label="Slide 44"><div class="content">
+  <h2>Practice under real constraints</h2>
+  <p>Some learning becomes real only when the world pushes back.</p>
+  <p>A patient deteriorates. An instrument behaves strangely. A client changes the requirement. A team member disagrees. A performance goes wrong.</p>
+</div><div class="pagenum">44</div></section>
+
+<section class="slide" data-index="44" id="s45" aria-label="Slide 45"><div class="content">
+  <h2>Where did the first rung go?</h2>
+  <p>Many professions taught novices through useful but lower-risk work.</p>
+  <p>Junior programmers fixed small bugs. Young analysts built spreadsheets. New lawyers searched cases. Research assistants cleaned data.</p>
+  <p>Some of that work is becoming easier to automate.</p>
+</div><div class="pagenum">45</div></section>
+
+<section class="slide" data-index="45" id="s46" aria-label="Slide 46"><div class="content">
+  <h2>The missing junior loop</h2>
+  <p>If fewer beginners learn through routine work inside firms, someone still has to build the path from knowing to doing.</p>
+  <p>Universities could provide supervised residencies, simulation labs, apprenticeships, live projects, and professional studios.</p>
+</div><div class="pagenum">46</div></section>
+
+<section class="slide" data-index="46" id="s47" aria-label="Slide 47"><div class="content">
+  <h2>A residency year</h2>
+  <p>Imagine a final year organized around real constraints.</p>
+  <p>Students work on consequential projects under supervision. They meet in a cohort. They explain decisions as they make them. Their final work is assessed through performance and defense.</p>
+</div><div class="pagenum">47</div></section>
+
+<section class="slide" data-index="47" id="s48" aria-label="Slide 48"><div class="content">
+  <h2>New fields move faster than committees</h2>
+  <p>AI agents. Robotics. Synthetic biology. Data governance. Cybersecurity. Drones.</p>
+  <p>By the time a slow curriculum process approves a program, the frontier may have moved.</p>
+</div><div class="pagenum">48</div></section>
+
+<section class="slide" data-index="48" id="s49" aria-label="Slide 49"><div class="content">
+  <h2>Fast credentials</h2>
+  <p>A university already has two things many new providers lack: recognized standing and disciplinary experts who can judge quality.</p>
+  <p>A standing unit could create, examine, review, and retire short credentials quickly.</p>
+</div><div class="pagenum">49</div></section>
+
+<section class="slide" data-index="49" id="s50" aria-label="Slide 50"><div class="content">
+  <h2>Research changes too</h2>
+  <p>AI lowers the cost of search, coding, analysis, drafting, and routine synthesis.</p>
+  <p>That can accelerate science. It may also pull attention toward questions that are easier to formulate, measure, and optimize.</p>
+</div><div class="pagenum">50</div></section>
+
+<section class="slide" data-index="50" id="s51" aria-label="Slide 51"><div class="content">
+  <h2>Go where the data are thin</h2>
+  <p>Universities have a reason to pursue work with uncertain payoff, little training data, long horizons, unfashionable questions, negative results, new instruments, and poorly framed problems.</p>
+  <p>The frontier remains valuable because it resists prediction.</p>
+</div><div class="pagenum">51</div></section>
+
+<section class="slide" data-index="51" id="s52" aria-label="Slide 52"><div class="content">
+  <h2>Not the same storm</h2>
+  <p>Elite institutions have brand and cohort protection.</p>
+  <p>Specialist institutions are stronger where labs, clinics, licensure, or deep physical expertise matter.</p>
+  <p>Broad teaching universities may face the hardest choices when instruction and coordination become easier to buy elsewhere.</p>
+</div><div class="pagenum">52</div></section>
+
+<section class="slide" data-index="52" id="s53" aria-label="Slide 53"><div class="content">
+  <p class="section-kicker">Institutional design</p>
+  <h2>How independent should certification become?</h2>
+  <div class="continuum"><div class="step">Instructor teaches and grades</div><div class="step">Second examiner moderates</div><div class="step">Assessment office examines</div><div class="step">Separate body certifies</div></div>
+  <p>Different claims may need different levels of distance.</p>
+</div><div class="pagenum">53</div></section>
+
+<section class="slide" data-index="53" id="s54" aria-label="Slide 54"><div class="content">
+  <h2>Who is accountable for the pass?</h2>
+  <p>AI may perform much of the evidence gathering.</p>
+  <p>For consequential certification, a named person or accountable academic body should be able to explain the decision, defend the standard, and hear an appeal.</p>
+</div><div class="pagenum">54</div></section>
+
+<section class="slide" data-index="54" id="s55" aria-label="Slide 55"><div class="content">
+  <h2>Administration after AI</h2>
+  <p>Some administrative work protects the institution's core claims: records, appeals, assessment integrity, research ethics, safety, licensure, and legal standing.</p>
+  <p>Other work can be automated, shared, simplified, or purchased.</p>
+</div><div class="pagenum">55</div></section>
+
+<section class="slide" data-index="55" id="s56" aria-label="Slide 56"><div class="content">
+  <h2>A running university cannot simply stop</h2>
+  <p>Current students still need to graduate. Existing programs remain accredited. Research continues. Faculty commitments persist. Donor promises remain. Employers expect continuity.</p>
+  <p>That makes wholesale redesign difficult even when the case is strong.</p>
+</div><div class="pagenum">56</div></section>
+
+<section class="slide" data-index="56" id="s57" aria-label="Slide 57"><div class="content">
+  <h2>Build the next model at the edge</h2>
+  <p>A new school, college, credentialing arm, residency program, or assessment unit can make a smaller set of new promises.</p>
+  <p>Give it a budget, a timetable, academic standards, and room to fail safely.</p>
+  <div class="edge"><div class="circle"><strong>Core university</strong><span>keeps faith</span></div><div class="arrowline"></div><div class="circle"><strong>Edge unit</strong><span>tests the next model</span></div></div>
+</div><div class="pagenum">57</div></section>
+
+<section class="slide" data-index="57" id="s58" aria-label="Slide 58"><div class="content">
+  <h2>Philanthropy has followed scarcity</h2>
+  <div class="diagram flow"><div class="box"><strong>Library era</strong><span>access to knowledge</span></div><div class="arrow">→</div><div class="box"><strong>Lab era</strong><span>experiment and practice</span></div><div class="arrow">→</div><div class="box"><strong>AI era</strong><span>proof of capability</span></div></div>
+  <p>Previous generations funded access. The next can fund capability.</p>
+</div><div class="pagenum">58</div></section>
+
+<section class="slide" data-index="58" id="s59" aria-label="Slide 59"><div class="content">
+  <h2>Where strategy may be overinvested</h2>
+  <div class="split-list"><p>more generic recorded content</p><p>undifferentiated AI literacy courses</p><p>detection software as the main integrity response</p><p>take-home artifacts as the dominant proof</p><p>automating complexity that should have been removed</p></div>
+</div><div class="pagenum">59</div></section>
+
+<section class="slide" data-index="59" id="s60" aria-label="Slide 60"><div class="content">
+  <h2>What to fund now</h2>
+  <p>Fund capabilities that make the degree more believable.</p>
+  <div class="split-list"><p>course architects</p><p>examiner time</p><p>assessment infrastructure</p><p>cohort and residency experiences</p><p>ring-fenced units that can move</p></div>
+</div><div class="pagenum">60</div></section>
+
+<section class="slide" data-index="60" id="s61" aria-label="Slide 61"><div class="content">
+  <h2>Measure what outsiders care about</h2>
+  <div class="split-list"><p>Can graduates do what the credential says?</p><p>Do employers trust the assessment?</p><p>Can students demonstrate capability beyond a polished artifact?</p><p>Do strong students want the cohort?</p><p>What does serious verification cost?</p></div>
+</div><div class="pagenum">61</div></section>
+
+<section class="slide" data-index="61" id="s62" aria-label="Slide 62"><div class="content">
+  <h2>The claim</h2>
+  <p>At graduation, the university should know more than whether a student completed the required courses.</p>
+  <p>It should be able to say: we saw this person reason, make, recover from mistakes, and work under constraints.</p>
+  <p class="bigline">We know what this graduate can do.</p>
+</div><div class="pagenum">62</div></section>
+
+<section class="slide slide-stop" data-index="62" id="s63" aria-label="Slide 63"><div class="content">
+  <h2>Stop here for the main talk</h2>
+  <p>Appendix follows only for questions and backup.</p>
+</div><div class="pagenum">63</div></section>
+
+<section class="slide slide-sources" data-index="63" id="s64" aria-label="Slide 64"><div class="content">
+  <h2>Sources</h2>
+  <p>Jason Potts, <em>The University after AI</em> (Version 0.1, 9 Sept 2026)</p>
+  <p class="url"><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7453440">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7453440</a></p>
+  <p>This talk extends that scaffold with institutional design, Base → Remix → Proof, and examples including NPTEL.</p>
+  <p class="credit">AI assistance: ChatGPT (OpenAI) and Grok (xAI) were used for critique, restructuring, language refinement, and presentation development. Final arguments and editorial choices are the author's.</p>
+</div><div class="pagenum">64</div></section>
+
+<section class="slide appendix" data-index="64" id="s65" aria-label="Slide 65"><div class="content">
+  <h2>Appendix A1: Glossary</h2>
+  <p><strong>Trusted claim / warrant:</strong> the public claim that a graduate has the capability represented by the credential.</p>
+  <p><strong>Signal erosion:</strong> familiar evidence separates people less clearly.</p>
+  <p><strong>Base:</strong> expert-curated intellectual architecture.</p>
+  <p><strong>Remix:</strong> AI-supported adaptation.</p>
+  <p><strong>Observed proof:</strong> evidence attributable to the learner.</p>
+</div><div class="pagenum">65</div></section>
+
+<section class="slide appendix" data-index="65" id="s66" aria-label="Slide 66"><div class="content">
+  <h2>Appendix A2: Protected judgment</h2>
+  <p>People making consequential academic judgments must be able to say no.</p>
+  <p>An examiner should be able to fail a candidate or reject inadequate work despite pressure from enrollment, rankings, revenue, employers, or families.</p>
+</div><div class="pagenum">66</div></section>
+
+<section class="slide appendix" data-index="66" id="s67" aria-label="Slide 67"><div class="content">
+  <h2>Appendix A3: Hart asset</h2>
+  <p>A Hart asset is an asset the organization cannot safely let another party control.</p>
+  <p>Main deck translation: what must the university continue to control if everything else becomes easier to buy?</p>
+</div><div class="pagenum">67</div></section>
+
+<section class="slide appendix" data-index="67" id="s68" aria-label="Slide 68"><div class="content">
+  <h2>Appendix A4: Sharper certification model</h2>
+  <p>A more radical model separates instruction and certification more strongly.</p>
+  <p>Students could learn through university teaching, AI systems, external courses, work experience, or independent study. The university would concentrate on examination and certification.</p>
+</div><div class="pagenum">68</div></section>
+
+<section class="slide appendix" data-index="68" id="s69" aria-label="Slide 69"><div class="content">
+  <h2>Appendix A5: Affiliation without traditional employment</h2>
+  <p>AI may reduce the infrastructure needed for some independent scholarship.</p>
+  <p>Universities may still provide grant holding, ethics review, laboratories, legal standing, colleagues, students, and reputation.</p>
+</div><div class="pagenum">69</div></section>
+
+<section class="slide appendix" data-index="69" id="s70" aria-label="Slide 70"><div class="content">
+  <h2>Appendix A6: Strategic contraction</h2>
+  <p>Which relationships genuinely require a university?</p>
+  <p>Activities based largely on information transfer may have strong external substitutes. Activities requiring legal standing, physical presence, durable trust, professional accountability, or certification may justify internal capacity.</p>
+</div><div class="pagenum">70</div></section>
+
+<section class="slide appendix" data-index="70" id="s71" aria-label="Slide 71"><div class="content">
+  <h2>Appendix A7: Outcome financing</h2>
+  <p>Outcome-linked financing raises practical, ethical, political, and regulatory questions.</p>
+  <p>Any entity responsible for independent certification should be cautious about holding a financial interest in the outcomes it certifies.</p>
+</div><div class="pagenum">71</div></section>
+
+<section class="slide appendix" data-index="71" id="s72" aria-label="Slide 72"><div class="content">
+  <h2>Appendix A8: Discussion questions</h2>
+  <p>Which assessments remain persuasive if AI use is universal?</p>
+  <p>Where should certification be more independent?</p>
+  <p>Which archive assets are trapped in poor interfaces?</p>
+  <p>What should a new unit test?</p>
+  <p>What should alumni fund first?</p>
+</div><div class="pagenum">72</div></section>
+
+</div></div>
+<div class="tap left" aria-hidden="true"></div><div class="tap right" aria-hidden="true"></div>
+<div id="hud"><span id="pos">1</span> / <span id="total">72</span> · ← → · tap edges · F</div>
+<script>
+(function() {
+  const slides = [...document.querySelectorAll('.slide')];
+  const stage = document.getElementById('stage');
+  const pos = document.getElementById('pos');
+  const total = document.getElementById('total');
+  const taps = { left: document.querySelector('.tap.left'), right: document.querySelector('.tap.right') };
+  total.textContent = slides.length;
+  let i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.replace(/\D/g,''), 10) || 1) - 1));
+
+  function clamp(lo, val, hi) { return Math.max(lo, Math.min(hi, val)); }
+
+  function setUnit() {
+    const h = stage.clientHeight || window.innerHeight;
+    const w = stage.clientWidth || window.innerWidth;
+    const raw = Math.min(h / 36, w / 64);
+    stage.style.setProperty('--u', clamp(13.5, raw, 22) + 'px');
+    fitSlide();
+  }
+
+  function fitSlide() {
+    const slide = slides[i];
+    if (!slide) return;
+    const content = slide.querySelector('.content');
+    slide.style.setProperty('--fit', '1');
+    requestAnimationFrame(() => {
+      let fit = 1;
+      const limit = slide.clientHeight * 0.91;
+      while (content.scrollHeight > limit && fit > 0.70) {
+        fit -= 0.025;
+        slide.style.setProperty('--fit', fit.toFixed(3));
+      }
+    });
+  }
+
+  function show(n) {
+    i = (n + slides.length) % slides.length;
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    pos.textContent = String(i + 1);
+    history.replaceState(null, '', '#' + (i + 1));
+    fitSlide();
+  }
+
+  window.addEventListener('resize', setUnit);
+  window.addEventListener('orientationchange', () => setTimeout(setUnit, 220));
+  window.addEventListener('keydown', (e) => {
+    const k = e.key;
+    if (k === 'ArrowRight' || k === 'PageDown' || k === ' ') { e.preventDefault(); show(i + 1); }
+    if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); show(i - 1); }
+    if (k === 'Home') { e.preventDefault(); show(0); }
+    if (k === 'End') { e.preventDefault(); show(slides.length - 1); }
+    if (k === 'f' || k === 'F') {
+      if (!document.fullscreenElement) stage.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    }
+  });
+
+  let tx = null, ty = null;
+  stage.addEventListener('touchstart', e => {
+    tx = e.changedTouches[0].clientX; ty = e.changedTouches[0].clientY;
+  }, {passive:true});
+  stage.addEventListener('touchend', e => {
+    if (tx == null || ty == null) return;
+    const dx = e.changedTouches[0].clientX - tx;
+    const dy = e.changedTouches[0].clientY - ty;
+    tx = ty = null;
+    if (Math.abs(dx) > 38 && Math.abs(dx) > Math.abs(dy)) show(i + (dx < 0 ? 1 : -1));
+  }, {passive:true});
+  taps.left.addEventListener('click', () => show(i - 1));
+  taps.right.addEventListener('click', () => show(i + 1));
+
+  setUnit();
+  show(i);
+})();
+</script>
+</body>
+</html>
