@@ -71,10 +71,15 @@
   .content {
     position: relative; z-index: 1;
     height: 100%; width: 100%;
-    display: flex; flex-direction: column; justify-content: center;
-    gap: calc(var(--u) * 0.52 * var(--fit));
+    display: flex; flex-direction: column; justify-content: flex-start;
+    padding-top: calc(var(--u) * 3.0);
+    gap: calc(var(--u) * 0.66 * var(--fit));
   }
-  .slide-title .content { text-align: center; align-items: center; gap: calc(var(--u) * 0.45 * var(--fit)); }
+  .slide-title .content {
+    justify-content: center; padding-top: 0;
+    text-align: center; align-items: center;
+    gap: calc(var(--u) * 0.45 * var(--fit));
+  }
   .slide-title::after { display: none; }
   h1, h2, h3 {
     text-wrap: balance;
@@ -82,18 +87,19 @@
     margin: 0; font-weight: 660; letter-spacing: -0.025em;
   }
   h1 { font-size: calc(var(--u) * 3.1 * var(--fit)); line-height: 1.05; max-width: 11.5em; }
-  h2 { font-size: calc(var(--u) * 2.15 * var(--fit)); line-height: 1.08; margin-bottom: calc(var(--u) * .15 * var(--fit)); max-width: 16em; }
+  h2 { font-size: calc(var(--u) * 2.15 * var(--fit)); line-height: 1.08; margin-bottom: calc(var(--u) * .10 * var(--fit)); max-width: 19em; }
   h3 { font-size: calc(var(--u) * 1.08 * var(--fit)); line-height: 1.1; color: var(--accent); letter-spacing: 0; }
   p, li {
-    font-size: calc(var(--u) * 1.13 * var(--fit));
-    line-height: 1.34; margin: 0; max-width: 40em;
+    font-size: calc(var(--u) * 1.16 * var(--fit));
+    line-height: 1.42; margin: 0;
+    max-width: min(46em, 88%);
   }
   .subtitle { font-size: calc(var(--u) * 1.34 * var(--fit)); color: var(--muted); max-width: 22em; text-wrap: balance; }
   .author { font-size: calc(var(--u) * 1.22 * var(--fit)); margin-top: calc(var(--u) * .75); color: #fff7e6; }
   .credit { font-size: calc(var(--u) * 0.74 * var(--fit)); color: var(--muted); max-width: 52em; }
   .url { font-size: calc(var(--u) * 0.72 * var(--fit)); color: var(--muted); word-break: break-word; }
   .url a { color: var(--accent); text-decoration: none; }
-  .bigline, .punch { font-size: calc(var(--u) * 1.62 * var(--fit)); line-height: 1.16; font-weight: 720; color: #fff7e6; max-width: 24em; text-wrap: balance; }
+  .bigline, .punch { font-size: calc(var(--u) * 1.58 * var(--fit)); line-height: 1.18; font-weight: 720; color: #fff7e6; max-width: 30em; text-wrap: balance; }
   .punch { margin-top: calc(var(--u) * .6); }
   .thesis { font-size: calc(var(--u) * 1.5 * var(--fit)); line-height: 1.28; max-width: 24em; }
   .small { font-size: calc(var(--u) * .85 * var(--fit)); color: var(--muted); max-width: 46em; }
@@ -139,9 +145,25 @@
   .edge .arrowline::after { content:""; position:absolute; right:-1px; top:-5px; width:0; height:0; border-left:9px solid var(--accent2); border-top:6px solid transparent; border-bottom:6px solid transparent; }
   .split-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: calc(var(--u) * .45) calc(var(--u) * .9); margin-top: calc(var(--u) * .4); }
   .split-list p { font-size: calc(var(--u) * .98 * var(--fit)); color: var(--muted); }
+
+  .network-wrap { display:grid; place-items:center; min-height: calc(var(--u) * 15); }
+  .network-svg { width: min(100%, 30em); height: auto; overflow: visible; }
+  .network-svg line { stroke: rgba(215,168,79,.48); stroke-width: 1.7; }
+  .network-svg circle { fill: var(--card2); stroke: rgba(215,168,79,.78); stroke-width: 1.6; }
+  .network-svg .center { fill: rgba(215,168,79,.13); stroke-width: 2.1; }
+  .network-svg text { fill: var(--fg); font: 600 16px/1 ui-sans-serif, system-ui; text-anchor: middle; dominant-baseline: middle; }
+  .network-svg .minor { fill: var(--muted); font-size: 14px; }
+
+  @media (min-width: 1100px) and (min-height: 620px) {
+    .slide { padding: 4.8% 6.8% 5.2%; }
+    .content { padding-top: calc(var(--u) * 3.4); }
+    p, li { max-width: min(48em, 90%); }
+    .two-col { gap: calc(var(--u) * 1.5); }
+  }
+
   .pagenum { position: absolute; right: 3.1%; bottom: 3.1%; color: rgba(247,241,228,.55); font: 600 calc(var(--u) * .62)/1 ui-sans-serif, system-ui; z-index: 2; }
   .section-kicker { color: var(--accent); text-transform: uppercase; letter-spacing: .08em; font-size: calc(var(--u) * .72 * var(--fit)); font-weight: 750; margin-bottom: calc(var(--u) * .18); }
-  .slide-stop .content, .slide-sources .content { text-align: center; align-items:center; }
+  .slide-stop .content, .slide-sources .content { justify-content:center; padding-top:0; text-align: center; align-items:center; }
   .slide-stop h2 { max-width:none; }
   .appendix h2 { font-size: calc(var(--u) * 1.8 * var(--fit)); }
   .appendix p { font-size: calc(var(--u) * .96 * var(--fit)); }
@@ -453,10 +475,27 @@
 </div><div class="pagenum">42</div></section>
 
 <section class="slide" data-index="42" id="s43" aria-label="Slide 43"><div class="content">
-  <h2>Placement beside people</h2>
-  <p>Universities place people beside others they could not easily find alone.</p>
-  <p>Students find peers. Researchers find collaborators. Employers find talent. Funders find projects.</p>
-  <p class="bigline">When information is abundant, placement becomes more consequential.</p>
+  <div class="two-col">
+    <div>
+      <h2>Placement beside people</h2>
+      <p>Universities put people beside others they could not easily find alone.</p>
+      <p>Peers, mentors, collaborators, employers, and funders become part of the learning environment.</p>
+      <p class="bigline">When information is abundant, the quality of those connections matters more.</p>
+    </div>
+    <div class="network-wrap" aria-hidden="true">
+      <svg class="network-svg" viewBox="0 0 520 360" role="img">
+        <line x1="260" y1="180" x2="260" y2="55"/><line x1="260" y1="180" x2="95" y2="145"/>
+        <line x1="260" y1="180" x2="425" y2="145"/><line x1="260" y1="180" x2="155" y2="305"/>
+        <line x1="260" y1="180" x2="365" y2="305"/>
+        <circle class="center" cx="260" cy="180" r="62"/><text x="260" y="174">University</text><text class="minor" x="260" y="199">community</text>
+        <circle cx="260" cy="55" r="47"/><text x="260" y="55">Peers</text>
+        <circle cx="95" cy="145" r="47"/><text x="95" y="145">Mentors</text>
+        <circle cx="425" cy="145" r="52"/><text x="425" y="145">Employers</text>
+        <circle cx="155" cy="305" r="55"/><text x="155" y="299">Research</text><text class="minor" x="155" y="320">partners</text>
+        <circle cx="365" cy="305" r="50"/><text x="365" y="305">Funders</text>
+      </svg>
+    </div>
+  </div>
 </div><div class="pagenum">43</div></section>
 
 <section class="slide" data-index="43" id="s44" aria-label="Slide 44"><div class="content">
@@ -662,7 +701,8 @@
     const h = stage.clientHeight || window.innerHeight;
     const w = stage.clientWidth || window.innerWidth;
     const raw = Math.min(h / 36, w / 64);
-    stage.style.setProperty('--u', clamp(13.5, raw, 22) + 'px');
+    const maxU = (w >= 1100 && h >= 620) ? 24 : 22;
+    stage.style.setProperty('--u', clamp(13.5, raw, maxU) + 'px');
     fitSlide();
   }
 
