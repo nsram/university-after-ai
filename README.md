@@ -11,7 +11,7 @@ Once GitHub Pages is enabled for the repository, the presentation will be availa
 
 `https://nsram.github.io/university-after-ai/`
 
-The deck is designed for landscape viewing on phones, tablets, and laptops. Use the left/right arrow keys, tap the screen edges, or swipe on touch devices. Press `F` for fullscreen on supported browsers.
+The deck uses a fixed 1600 × 900 slide canvas that scales uniformly for landscape viewing on phones, tablets, and laptops. Use the left/right arrow keys, tap the screen edges, or swipe on touch devices. Press `F` for fullscreen on supported browsers.
 
 ## Files
 

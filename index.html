@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<title>A New Foundation for the University — v3.6</title>
+<title>A New Foundation for the University</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
 <link rel="icon" href="favicon.ico" sizes="any"/>
 <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
@@ -218,6 +218,426 @@
     .tap, #hud, #rotate { display:none !important; }
   }
 </style>
+<style id="deck-redesign">
+  :root {
+    --bg: #f4f0e8;
+    --fg: #16202a;
+    --muted: #4f5b63;
+    --accent: #9a5c3a;
+    --accent2: #2f6f73;
+    --card: #ebe4d8;
+    --card2: #e7eee9;
+    --line: #d0c6b8;
+    --surround: #24272b;
+    --shadow: rgba(0, 0, 0, 0.28);
+  }
+
+  html, body {
+    background: var(--surround);
+    color: var(--fg);
+    font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  }
+
+  #deck {
+    padding: 24px;
+    background: var(--surround);
+  }
+
+  #stage {
+    width: 1600px;
+    height: 900px;
+    flex: 0 0 auto;
+    transform: scale(var(--deck-scale, 1));
+    transform-origin: center center;
+    background: var(--bg);
+    box-shadow: 0 24px 72px var(--shadow), 0 0 0 1px rgba(255,255,255,.16);
+    --u: 24px;
+  }
+
+  #stage::before { display: none; }
+
+  .slide {
+    padding: 82px 96px 72px;
+    background:
+      radial-gradient(circle at 96% 4%, rgba(47,111,115,.07), transparent 23%),
+      var(--bg);
+  }
+
+  .slide::before { display: none; }
+  .slide::after {
+    content: "";
+    position: absolute;
+    left: 96px;
+    top: 51px;
+    width: 112px;
+    height: 5px;
+    min-width: 0;
+    background: var(--accent);
+    opacity: 1;
+  }
+
+  .content,
+  .slide:has(.two-col) .content,
+  .slide:has(.three-col) .content,
+  .slide:has(.timeline) .content,
+  .slide:has(.triad) .content,
+  .slide:has(.doorway) .content,
+  .slide:has(.continuum) .content,
+  .slide:has(.edge) .content,
+  .slide:has(.artifact-grid) .content,
+  .slide:has(.flow) .content {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    gap: calc(22px * var(--fit));
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .slide-title {
+    background:
+      linear-gradient(90deg, rgba(154,92,58,.08), transparent 38%),
+      radial-gradient(circle at 82% 23%, rgba(47,111,115,.12), transparent 30%),
+      var(--bg);
+  }
+  .slide-title::after { display: none; }
+  .slide-title .content {
+    width: 100%;
+    height: 100%;
+    padding: 0 110px;
+    gap: calc(17px * var(--fit));
+  }
+
+  h1, h2, h3 {
+    color: var(--fg);
+    font-family: "Iowan Old Style", Baskerville, Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+
+  h1 {
+    max-width: 1240px;
+    font-size: calc(82px * var(--fit));
+    line-height: 1.03;
+  }
+
+  h2 {
+    max-width: 1280px;
+    font-size: calc(56px * var(--fit));
+    line-height: 1.08;
+    margin: 0 0 calc(8px * var(--fit));
+  }
+
+  h3 {
+    font-size: calc(31px * var(--fit));
+    line-height: 1.12;
+    color: var(--accent);
+  }
+
+  p, li {
+    max-width: 1240px;
+    font-size: calc(31px * var(--fit));
+    line-height: 1.34;
+    color: var(--fg);
+  }
+
+  strong { font-weight: 700; }
+  .subtitle {
+    max-width: 900px;
+    font-size: calc(38px * var(--fit));
+    line-height: 1.24;
+    color: var(--muted);
+  }
+  .author {
+    margin-top: calc(20px * var(--fit));
+    font-size: calc(29px * var(--fit));
+    color: var(--fg);
+  }
+  .credit {
+    max-width: 900px;
+    font-size: calc(20px * var(--fit));
+    color: var(--muted);
+  }
+  .url { font-size: calc(20px * var(--fit)); color: var(--muted); }
+  .url a { color: var(--accent2); text-decoration: underline; text-underline-offset: 4px; }
+  .bigline, .punch {
+    max-width: 1240px;
+    font-size: calc(40px * var(--fit));
+    line-height: 1.18;
+    color: var(--accent);
+    font-weight: 650;
+  }
+  .punch { margin-top: calc(18px * var(--fit)); }
+  .thesis {
+    max-width: 1280px;
+    font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+    font-size: calc(46px * var(--fit));
+    line-height: 1.28;
+  }
+  .small { max-width: 1160px; font-size: calc(23px * var(--fit)); color: var(--muted); }
+  .section-kicker {
+    margin: 0 0 calc(3px * var(--fit));
+    font-size: calc(20px * var(--fit));
+    color: var(--accent2);
+    letter-spacing: .09em;
+  }
+
+  ul.clean { gap: calc(12px * var(--fit)); }
+  ul.clean li::before { color: var(--accent); }
+
+  .artifact-grid {
+    width: 100%;
+    max-width: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+    margin-top: 30px;
+  }
+  .artifact-grid div, .tile, .card {
+    border: 0;
+    border-top: 5px solid var(--accent2);
+    border-radius: 0;
+    background: rgba(47,111,115,.055);
+    box-shadow: none;
+    padding: 30px 22px;
+  }
+  .artifact-grid div {
+    min-height: 180px;
+    color: var(--fg);
+    font-size: calc(30px * var(--fit));
+    font-weight: 650;
+  }
+
+  .two-col { grid-template-columns: 1.08fr .92fr; gap: 64px; }
+  .three-col { gap: 34px; }
+  .card p, .tile p { font-size: calc(27px * var(--fit)); color: var(--muted); }
+  .mini { font-size: calc(23px * var(--fit)); color: var(--muted); }
+  .diagram { margin-top: 20px; }
+
+  .flow { gap: 18px; }
+  .flow .box {
+    min-height: 142px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: rgba(255,255,255,.28);
+    padding: 25px;
+    box-shadow: none;
+  }
+  .flow .box strong { font-size: calc(27px * var(--fit)); color: var(--fg); }
+  .flow .box span { font-size: calc(21px * var(--fit)); color: var(--muted); }
+  .arrow { font-size: calc(34px * var(--fit)); color: var(--accent); }
+
+  .timeline { gap: 20px; margin-top: 28px; }
+  .timeline .box {
+    min-height: 178px;
+    border: 0;
+    border-top: 5px solid var(--accent);
+    border-radius: 0;
+    background: transparent;
+    padding: 22px 12px 0 0;
+  }
+  .timeline strong { font-size: calc(26px * var(--fit)); color: var(--fg); }
+  .timeline span { font-size: calc(21px * var(--fit)); color: var(--muted); line-height: 1.3; }
+
+  .triad { gap: 42px; margin-top: 30px; }
+  .triad > div {
+    min-height: 230px;
+    border: 0;
+    border-left: 6px solid var(--accent);
+    border-radius: 0;
+    background: transparent;
+    padding: 15px 30px;
+  }
+  .triad > div:nth-child(2) { border-left-color: var(--accent2); }
+  .triad > div:nth-child(3) { border-left-color: var(--fg); }
+  .triad p { font-size: calc(27px * var(--fit)); color: var(--muted); line-height: 1.38; }
+
+  .doorway { max-width: 1320px; width: 100%; gap: 32px; margin-top: 24px; }
+  .doorway .pair { font-size: calc(26px * var(--fit)); color: var(--muted); gap: 16px; }
+  .doorway .bar { font-size: calc(44px * var(--fit)); color: var(--accent); }
+  .doorway b { color: var(--accent2); }
+
+  .continuum { gap: 22px; margin-top: 34px; }
+  .continuum .step {
+    min-height: 150px;
+    border-top: 5px solid var(--accent);
+    border-radius: 0;
+    background: transparent;
+    padding: 22px 8px 0 0;
+    font-size: calc(25px * var(--fit));
+    color: var(--fg);
+  }
+  .continuum .step:nth-child(n+3) { border-color: var(--accent2); }
+
+  .edge { width: 100%; max-width: 1240px; gap: 34px; margin-top: 28px; }
+  .edge .circle {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: rgba(255,255,255,.3);
+    padding: 28px;
+  }
+  .edge .circle strong { font-size: calc(29px * var(--fit)); color: var(--fg); }
+  .edge .circle span { font-size: calc(22px * var(--fit)); color: var(--muted); }
+  .edge .arrowline { background: linear-gradient(90deg,var(--accent),var(--accent2)); }
+
+  .split-list { gap: 18px 56px; margin-top: 20px; max-width: 1300px; }
+  .split-list p {
+    position: relative;
+    padding: 12px 0 12px 26px;
+    border-bottom: 1px solid var(--line);
+    font-size: calc(27px * var(--fit));
+    color: var(--fg);
+  }
+  .split-list p::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 25px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .network-wrap { min-height: 500px; }
+  .network-svg { width: min(100%, 560px); }
+  .network-svg line { stroke: rgba(47,111,115,.48); stroke-width: 2; }
+  .network-svg circle { fill: #ebe4d8; stroke: var(--accent); stroke-width: 2; }
+  .network-svg .center { fill: #e7eee9; stroke: var(--accent2); stroke-width: 3; }
+  .network-svg text { fill: var(--fg); font: 650 17px/1 ui-sans-serif, system-ui; }
+  .network-svg .minor { fill: var(--muted); }
+
+  .slide-stop, .slide-sources {
+    background:
+      radial-gradient(circle at 50% 42%, rgba(47,111,115,.09), transparent 42%),
+      var(--bg);
+  }
+  .slide-stop::after, .slide-sources::after { display: none; }
+  .slide-stop .content, .slide-sources .content { width: 100%; height: 100%; }
+  .appendix h2 { font-size: calc(48px * var(--fit)); }
+  .appendix p { font-size: calc(28px * var(--fit)); }
+
+  #hud {
+    left: 50%;
+    right: auto;
+    bottom: 22px;
+    transform: translateX(-50%);
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: none;
+    color: #6a706f;
+    font: 650 18px/1.2 ui-sans-serif, system-ui;
+    letter-spacing: .035em;
+  }
+  .tap { width: 13vw; }
+
+  /* Native figures: flat, readable, and tied to the argument. */
+  .contrast-figure,
+  .signal-figure,
+  .bundle-figure,
+  .before-after,
+  .branch-figure,
+  .faculty-figure,
+  .ladder-figure,
+  .cycle-figure,
+  .frontier-figure,
+  .institution-figure,
+  .transition-figure,
+  .claim-figure {
+    width: 100%;
+    max-width: 1320px;
+    margin-top: 22px;
+  }
+
+  .contrast-figure { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
+  .contrast-figure > div { padding: 24px 28px; border-top: 6px solid var(--accent2); background: rgba(47,111,115,.055); }
+  .contrast-figure > div:last-child { border-top-color: var(--accent); background: rgba(154,92,58,.055); }
+  .figure-label { display:block; margin-bottom:10px; color:var(--muted); font-size:22px; text-transform:uppercase; letter-spacing:.07em; font-weight:750; }
+  .figure-main { display:block; color:var(--fg); font:600 34px/1.18 "Iowan Old Style", Baskerville, Georgia, serif; }
+  .figure-note { display:block; margin-top:12px; color:var(--muted); font-size:23px; line-height:1.3; }
+
+  .pillars { display:grid; grid-template-columns:repeat(4,1fr); gap:28px; margin-top:32px; width:100%; }
+  .pillar { min-height:190px; padding:26px 20px; border-left:6px solid var(--accent); background:rgba(255,255,255,.24); }
+  .pillar:nth-child(even) { border-left-color:var(--accent2); }
+  .pillar strong { display:block; font:600 33px/1.1 "Iowan Old Style", Baskerville, Georgia, serif; color:var(--fg); }
+  .pillar span { display:block; margin-top:14px; font-size:22px; line-height:1.3; color:var(--muted); }
+
+  .signal-figure { display:grid; grid-template-columns:1fr 150px 1fr; align-items:center; gap:20px; }
+  .signal-node { padding:26px 30px; border:1px solid var(--line); background:rgba(255,255,255,.3); text-align:center; }
+  .signal-node strong { display:block; font-size:30px; color:var(--fg); }
+  .signal-node span { display:block; margin-top:8px; font-size:22px; color:var(--muted); }
+  .signal-gap { position:relative; height:3px; background:repeating-linear-gradient(90deg,var(--accent) 0 14px,transparent 14px 25px); }
+  .signal-gap::after { content:"?"; position:absolute; left:50%; top:50%; transform:translate(-50%,-54%); width:54px; height:54px; display:grid; place-items:center; border-radius:50%; background:var(--bg); color:var(--accent); font:700 34px/1 ui-sans-serif,system-ui; }
+
+  .bundle-figure { display:grid; grid-template-columns:1.55fr .35fr .8fr; align-items:center; gap:26px; }
+  .bundle-parts { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  .bundle-parts span { padding:14px 18px; border-left:4px solid var(--accent2); background:rgba(47,111,115,.05); font-size:23px; }
+  .bundle-link { height:3px; background:var(--accent); }
+  .bundle-result { padding:34px 24px; border:2px solid var(--accent); text-align:center; font:600 34px/1.15 "Iowan Old Style",Baskerville,Georgia,serif; }
+
+  .before-after { display:grid; grid-template-columns:1fr 1fr; gap:56px; }
+  .before-after h3 { margin-bottom:16px; }
+  .playlist-bar { height:42px; background:linear-gradient(90deg,var(--accent),#c69a7e); border-radius:4px; }
+  .pieces { display:grid; grid-template-columns:repeat(6,1fr); gap:9px; }
+  .pieces span { height:42px; background:var(--accent2); border-radius:4px; opacity:.78; }
+  .before-after p { margin-top:14px; font-size:22px; color:var(--muted); }
+
+  .branch-figure { display:grid; grid-template-columns:270px 1fr; align-items:stretch; gap:26px; }
+  .branch-spine { display:grid; place-items:center; padding:28px; background:var(--fg); color:var(--bg); font:600 34px/1.15 "Iowan Old Style",Baskerville,Georgia,serif; text-align:center; }
+  .branch-options { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  .branch-options span { padding:20px 24px; border-left:5px solid var(--accent2); background:rgba(47,111,115,.055); font-size:25px; }
+
+  .faculty-figure { display:grid; grid-template-columns:1fr 1fr; gap:50px; }
+  .faculty-figure > div { min-height:180px; padding:28px 30px; border-top:6px solid var(--accent); background:rgba(154,92,58,.05); }
+  .faculty-figure > div:last-child { border-color:var(--accent2); background:rgba(47,111,115,.05); }
+  .faculty-figure strong { display:block; font:600 35px/1.12 "Iowan Old Style",Baskerville,Georgia,serif; }
+  .faculty-figure span { display:block; margin-top:14px; font-size:23px; color:var(--muted); line-height:1.3; }
+
+  .ladder-figure { display:grid; gap:14px; max-width:920px; }
+  .rung { display:grid; grid-template-columns:220px 1fr; gap:20px; align-items:center; }
+  .rung strong { font-size:22px; color:var(--muted); text-align:right; }
+  .rung span { display:block; height:28px; background:var(--accent2); }
+  .rung.missing span { background:repeating-linear-gradient(90deg,rgba(154,92,58,.45) 0 24px,transparent 24px 40px); }
+  .rung.missing strong { color:var(--accent); }
+
+  .cycle-figure { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; counter-reset:cycle; }
+  .cycle-figure div { position:relative; min-height:148px; padding:48px 20px 20px; border-top:5px solid var(--accent2); background:rgba(47,111,115,.05); font-size:24px; line-height:1.28; }
+  .cycle-figure div::before { counter-increment:cycle; content:counter(cycle); position:absolute; top:12px; left:20px; color:var(--accent); font-weight:800; }
+
+  .frontier-figure { display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--line); }
+  .frontier-figure > div { min-height:190px; padding:30px; }
+  .frontier-figure .known { background:linear-gradient(135deg,rgba(47,111,115,.12),rgba(47,111,115,.03)); }
+  .frontier-figure .thin { background:linear-gradient(135deg,rgba(154,92,58,.03),rgba(154,92,58,.12)); border-left:3px dashed var(--accent); }
+  .frontier-figure strong { display:block; font:600 33px/1.12 "Iowan Old Style",Baskerville,Georgia,serif; }
+  .frontier-figure span { display:block; margin-top:12px; font-size:22px; color:var(--muted); line-height:1.32; }
+
+  .institution-figure { display:grid; gap:18px; }
+  .institution-row { display:grid; grid-template-columns:280px 1fr; gap:26px; align-items:center; }
+  .institution-row strong { font-size:24px; }
+  .institution-row span { display:block; height:34px; background:var(--accent2); }
+  .institution-row:nth-child(2) span { width:78%; background:#678e83; }
+  .institution-row:nth-child(3) span { width:48%; background:var(--accent); }
+
+  .transition-figure { display:grid; grid-template-columns:1fr 1fr; gap:50px; }
+  .transition-figure > div { padding:28px; border-left:6px solid var(--fg); background:rgba(255,255,255,.24); }
+  .transition-figure > div:last-child { border-color:var(--accent2); }
+  .transition-figure strong { display:block; font:600 34px/1.15 "Iowan Old Style",Baskerville,Georgia,serif; }
+  .transition-figure span { display:block; margin-top:12px; font-size:23px; color:var(--muted); }
+
+  .claim-figure { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; }
+  .claim-figure div { padding:24px 20px; border-top:5px solid var(--accent2); text-align:center; font-size:25px; background:rgba(47,111,115,.05); }
+
+  @media (orientation: portrait) and (max-width: 900px) { #rotate { display: grid; } }
+  @media print {
+    @page { size: 16in 9in; margin: 0; }
+    html, body, #deck { width: 16in; background: white; padding: 0; }
+    #stage { width: 16in; height: auto; transform: none !important; box-shadow: none; }
+    .slide { width: 16in; height: 9in; }
+  }
+</style>
 </head>
 <body>
 <div id="rotate"><div><strong>Rotate to landscape</strong><span>This deck is designed as a 16:9 landscape talk for phone, tablet, and laptop.</span></div></div>
@@ -229,7 +649,7 @@
   <p class="author">Sriram Natarajan</p>
   <p class="credit">Drawing on Jason Potts, <em>The University after AI</em>.</p>
   <p class="credit">Developed with assistance from ChatGPT and Grok.</p>
-  <p class="credit">Sources and speaker notes in companion file.</p>
+  <p class="credit">Sources appear in the appendix.</p>
 </div><div class="pagenum">1</div></section>
 
 <section class="slide" data-index="1" id="s2" aria-label="Slide 2"><div class="content">
@@ -240,20 +660,32 @@
 
 <section class="slide" data-index="2" id="s3" aria-label="Slide 3"><div class="content">
   <h2>A new gap</h2>
-  <p>AI can be an extraordinarily patient tutor.</p>
-  <p>It can also produce a polished submission for a student who has learned very little.</p>
+  <div class="contrast-figure" role="img" aria-label="AI can support learning or produce work without learning">
+    <div><span class="figure-label">AI as tutor</span><span class="figure-main">Patient explanation and practice</span><span class="figure-note">The student does the cognitive work.</span></div>
+    <div><span class="figure-label">AI as producer</span><span class="figure-main">Polished submission with little learning</span><span class="figure-note">The artifact can hide who did the work.</span></div>
+  </div>
   <p class="bigline">Use AI to learn. Demand stronger evidence.</p>
 </div><div class="pagenum">3</div></section>
 
 <section class="slide" data-index="3" id="s4" aria-label="Slide 4"><div class="content">
   <h2>The thesis</h2>
   <p class="thesis">As instruction and polished output become abundant, universities become more valuable where they can provide credible proof, valuable peers, real practice, and trusted judgment.</p>
+  <div class="pillars" role="img" aria-label="Four sources of university value after AI">
+    <div class="pillar"><strong>Proof</strong><span>Evidence that a graduate can perform.</span></div>
+    <div class="pillar"><strong>Peers</strong><span>A cohort worth learning beside.</span></div>
+    <div class="pillar"><strong>Practice</strong><span>Work under real constraints.</span></div>
+    <div class="pillar"><strong>Judgment</strong><span>Decisions that remain accountable.</span></div>
+  </div>
 </div><div class="pagenum">4</div></section>
 
 <section class="slide" data-index="4" id="s5" aria-label="Slide 5"><div class="content">
   <h2>AI reaches farther</h2>
   <p>A university can tolerate cheap books and cheap lectures.</p>
-  <p>It faces a harder problem when essays, programs, analyses, and reports can be produced without clearly revealing what the student knows.</p>
+  <div class="signal-figure" role="img" aria-label="The link between a polished artifact and student capability has weakened">
+    <div class="signal-node"><strong>Polished artifact</strong><span>Essay, program, analysis, report</span></div>
+    <div class="signal-gap" aria-hidden="true"></div>
+    <div class="signal-node"><strong>Student capability</strong><span>Understanding, judgment, performance</span></div>
+  </div>
   <p class="bigline">The evidence itself has changed.</p>
 </div><div class="pagenum">5</div></section>
 
@@ -315,7 +747,11 @@
   <p class="section-kicker">When the artifact stops being enough</p>
   <h2>The take-home artifact</h2>
   <p>A polished essay once bundled several clues together.</p>
-  <p>The student probably read, synthesized, wrote, revised, and spent time wrestling with the material.</p>
+  <div class="bundle-figure" role="img" aria-label="Several learning activities once converged in one essay">
+    <div class="bundle-parts"><span>Reading</span><span>Synthesis</span><span>Writing</span><span>Revision</span><span>Time wrestling with the material</span></div>
+    <div class="bundle-link" aria-hidden="true"></div>
+    <div class="bundle-result">Polished essay</div>
+  </div>
   <p>Those inferences are becoming weaker.</p>
 </div><div class="pagenum">14</div></section>
 
@@ -425,7 +861,10 @@
 <section class="slide" data-index="30" id="s31" aria-label="Slide 31"><div class="content">
   <h2>The playlist is the problem</h2>
   <p>A forty-hour course no longer has to be consumed as forty consecutive hours.</p>
-  <p>Its concepts, examples, demonstrations, and explanations can become addressable pieces.</p>
+  <div class="before-after" role="img" aria-label="A linear course can become addressable learning pieces">
+    <div><h3>Linear course</h3><div class="playlist-bar"></div><p>One long sequence</p></div>
+    <div><h3>Addressable archive</h3><div class="pieces"><span></span><span></span><span></span><span></span><span></span><span></span></div><p>Concepts, examples, demonstrations, explanations</p></div>
+  </div>
   <p>Students should meet the right part when they need it.</p>
 </div><div class="pagenum">31</div></section>
 
@@ -459,7 +898,10 @@
 <section class="slide" data-index="35" id="s36" aria-label="Slide 36"><div class="content">
   <h2>Remix</h2>
   <p>Once the base is trustworthy, personalization becomes much cheaper.</p>
-  <p>One student needs a simpler example. Another needs a harder problem. Another needs a visual explanation. Another needs a prerequisite.</p>
+  <div class="branch-figure" role="img" aria-label="A trustworthy course base supports several personalized paths">
+    <div class="branch-spine">Trusted course base</div>
+    <div class="branch-options"><span>Simpler example</span><span>Harder problem</span><span>Visual explanation</span><span>Missing prerequisite</span></div>
+  </div>
   <p>The course bends without losing its spine.</p>
 </div><div class="pagenum">36</div></section>
 
@@ -479,7 +921,10 @@
 <section class="slide" data-index="38" id="s39" aria-label="Slide 39"><div class="content">
   <h2>Where faculty time matters most</h2>
   <p>AI can absorb much routine variation in explanation and practice.</p>
-  <p>Faculty attention becomes especially valuable in two places: shaping the course's intellectual architecture and making difficult judgments about capability.</p>
+  <div class="faculty-figure" role="img" aria-label="Faculty time is most valuable in course architecture and capability judgments">
+    <div><strong>Course architecture</strong><span>What matters, what comes first, and which examples reveal the field.</span></div>
+    <div><strong>Capability judgment</strong><span>Whether the evidence supports a consequential claim about the learner.</span></div>
+  </div>
 </div><div class="pagenum">39</div></section>
 
 <section class="slide" data-index="39" id="s40" aria-label="Slide 40"><div class="content">
@@ -534,7 +979,11 @@
 <section class="slide" data-index="44" id="s45" aria-label="Slide 45"><div class="content">
   <h2>Where did the first rung go?</h2>
   <p>Many professions taught novices through useful but lower-risk work.</p>
-  <p>Junior programmers fixed small bugs. Young analysts built spreadsheets. New lawyers searched cases. Research assistants cleaned data.</p>
+  <div class="ladder-figure" role="img" aria-label="Automation weakens the first rung of professional learning">
+    <div class="rung"><strong>Independent work</strong><span></span></div>
+    <div class="rung"><strong>Supervised practice</strong><span></span></div>
+    <div class="rung missing"><strong>Routine junior work</strong><span></span></div>
+  </div>
   <p>Some of that work is becoming easier to automate.</p>
 </div><div class="pagenum">45</div></section>
 
@@ -547,7 +996,9 @@
 <section class="slide" data-index="46" id="s47" aria-label="Slide 47"><div class="content">
   <h2>A residency year</h2>
   <p>Imagine a final year organized around real constraints.</p>
-  <p>Students work on consequential projects under supervision. They meet in a cohort. They explain decisions as they make them. Their final work is assessed through performance and defense.</p>
+  <div class="cycle-figure" role="img" aria-label="Four elements of a residency year">
+    <div>Consequential projects</div><div>Supervised work</div><div>Decisions explained in real time</div><div>Performance and defense</div>
+  </div>
 </div><div class="pagenum">47</div></section>
 
 <section class="slide" data-index="47" id="s48" aria-label="Slide 48"><div class="content">
@@ -565,6 +1016,10 @@
 <section class="slide" data-index="49" id="s50" aria-label="Slide 50"><div class="content">
   <h2>Research changes too</h2>
   <p>AI lowers the cost of search, coding, analysis, drafting, and routine synthesis.</p>
+  <div class="frontier-figure" role="img" aria-label="AI accelerates work where data are rich while universities can explore thin-data frontiers">
+    <div class="known"><strong>Data-rich questions</strong><span>Easier to formulate, measure, search, and optimize.</span></div>
+    <div class="thin"><strong>Thin-data frontier</strong><span>Uncertain payoff, poor framing, new instruments, and long horizons.</span></div>
+  </div>
   <p>That can accelerate science. It may also pull attention toward questions that are easier to formulate, measure, and optimize.</p>
 </div><div class="pagenum">50</div></section>
 
@@ -579,6 +1034,11 @@
   <p>Elite institutions have brand and cohort protection.</p>
   <p>Specialist institutions are stronger where labs, clinics, licensure, or deep physical expertise matter.</p>
   <p>Broad teaching universities may face the hardest choices when instruction and coordination become easier to buy elsewhere.</p>
+  <div class="institution-figure" role="img" aria-label="Institution types have different protection from AI-driven substitution">
+    <div class="institution-row"><strong>Elite institutions</strong><span></span></div>
+    <div class="institution-row"><strong>Specialist institutions</strong><span></span></div>
+    <div class="institution-row"><strong>Broad teaching universities</strong><span></span></div>
+  </div>
 </div><div class="pagenum">52</div></section>
 
 <section class="slide" data-index="52" id="s53" aria-label="Slide 53"><div class="content">
@@ -603,6 +1063,10 @@
 <section class="slide" data-index="55" id="s56" aria-label="Slide 56"><div class="content">
   <h2>A running university cannot simply stop</h2>
   <p>Current students still need to graduate. Existing programs remain accredited. Research continues. Faculty commitments persist. Donor promises remain. Employers expect continuity.</p>
+  <div class="transition-figure" role="img" aria-label="Universities must preserve current commitments while testing a new model">
+    <div><strong>Keep faith</strong><span>Graduate students, preserve accreditation, continue research, honor commitments.</span></div>
+    <div><strong>Test the next model</strong><span>Use a bounded unit with new promises, standards, and room to learn.</span></div>
+  </div>
   <p>That makes wholesale redesign difficult even when the case is strong.</p>
 </div><div class="pagenum">56</div></section>
 
@@ -639,6 +1103,9 @@
   <h2>The claim</h2>
   <p>At graduation, the university should know more than whether a student completed the required courses.</p>
   <p>It should be able to say: we saw this person reason, make, recover from mistakes, and work under constraints.</p>
+  <div class="claim-figure" role="img" aria-label="Observed reasoning, making, and recovery support the graduate capability claim">
+    <div>Observed reasoning</div><div>Work under constraint</div><div>Recovery from mistakes</div>
+  </div>
   <p class="bigline">We know what this graduate can do.</p>
 </div><div class="pagenum">62</div></section>
 
@@ -722,14 +1189,12 @@
   total.textContent = slides.length;
   let i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.replace(/\D/g,''), 10) || 1) - 1));
 
-  function clamp(lo, val, hi) { return Math.max(lo, Math.min(hi, val)); }
-
   function setUnit() {
-    const h = stage.clientHeight || window.innerHeight;
-    const w = stage.clientWidth || window.innerWidth;
-    const raw = Math.min(h / 36, w / 64);
-    const maxU = (w >= 1100 && h >= 620) ? 25.5 : 22.5;
-    stage.style.setProperty('--u', clamp(13.5, raw, maxU) + 'px');
+    const gutter = (window.innerWidth > 760 && window.innerHeight > 480) ? 24 : 0;
+    const availableWidth = Math.max(320, window.innerWidth - gutter * 2);
+    const availableHeight = Math.max(180, window.innerHeight - gutter * 2);
+    const scale = Math.min(availableWidth / 1600, availableHeight / 900);
+    stage.style.setProperty('--deck-scale', String(scale));
     fitSlide();
   }
 
@@ -740,8 +1205,8 @@
     slide.style.setProperty('--fit', '1');
     requestAnimationFrame(() => {
       let fit = 1;
-      const limit = slide.clientHeight * 0.91;
-      while (content.scrollHeight > limit && fit > 0.70) {
+      const limit = content.clientHeight;
+      while (content.scrollHeight > limit + 1 && fit > 0.80) {
         fit -= 0.025;
         slide.style.setProperty('--fit', fit.toFixed(3));
       }
