@@ -3,21 +3,22 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<title>A New Foundation for the University — v3.3</title>
+<title>A New Foundation for the University — v3.5</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
 <link rel="icon" href="favicon.ico" sizes="any"/>
 <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
 <style>
   :root {
-    --bg: #111923;
+    --bg: #0f1722;
+    --field: rgba(255,248,232,0.045);
     --fg: #f7f1e4;
-    --muted: #c7bdab;
+    --muted: #d1c8b8;
     --soft: #9fb6a8;
     --accent: #d7a84f;
     --accent2: #78a6b8;
-    --card: rgba(255,255,255,0.075);
-    --card2: rgba(215,168,79,0.13);
-    --line: rgba(247,241,228,0.20);
+    --card: rgba(255,255,255,0.082);
+    --card2: rgba(215,168,79,0.12);
+    --line: rgba(247,241,228,0.18);
     --shadow: rgba(0,0,0,0.45);
     --u: 18px;
   }
@@ -30,7 +31,7 @@
   #deck {
     position: fixed; inset: 0;
     display: grid; place-items: center;
-    background: radial-gradient(circle at 50% 20%, #1f2b36 0%, #050607 68%);
+    background: radial-gradient(circle at 50% 16%, #1a2631 0%, #050607 72%);
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   }
   #stage {
@@ -38,9 +39,9 @@
     width: min(100vw, calc(100svh * 16 / 9));
     height: min(100svh, calc(100vw * 9 / 16));
     background:
-      radial-gradient(circle at 16% 10%, rgba(215,168,79,0.10), transparent 34%),
+      radial-gradient(circle at 15% 9%, rgba(215,168,79,0.13), transparent 32%),
       radial-gradient(circle at 86% 80%, rgba(120,166,184,0.12), transparent 38%),
-      linear-gradient(135deg, #121b25 0%, #0c131c 100%);
+      linear-gradient(135deg, #101824 0%, #0a1119 100%);
     overflow: hidden;
     box-shadow: 0 20px 60px var(--shadow), 0 0 0 1px rgba(255,255,255,0.08);
   }
@@ -57,10 +58,22 @@
   .slide {
     position: absolute; inset: 0;
     display: none;
-    padding: 5.2% 6.2% 5.4%;
+    padding: 5.0% 6.2% 5.4%;
     --fit: 1;
   }
   .slide.active { display: block; }
+  .slide::before {
+    content: "";
+    position: absolute;
+    left: 4.7%; top: 5.2%; bottom: 5.2%;
+    width: min(68%, 920px);
+    border-radius: 28px;
+    background:
+      linear-gradient(90deg, var(--field) 0%, rgba(255,248,232,0.026) 58%, rgba(255,248,232,0.004) 100%);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.035);
+    pointer-events: none;
+  }
+  .slide-title::before, .slide-stop::before, .slide-sources::before { display: none; }
   .slide::after {
     content: "";
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -84,25 +97,25 @@
   h1, h2, h3 {
     text-wrap: balance;
     font-family: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
-    margin: 0; font-weight: 660; letter-spacing: -0.025em;
+    margin: 0; font-weight: 575; letter-spacing: -0.02em;
   }
-  h1 { font-size: calc(var(--u) * 3.1 * var(--fit)); line-height: 1.05; max-width: 11.5em; }
-  h2 { font-size: calc(var(--u) * 2.15 * var(--fit)); line-height: 1.08; margin-bottom: calc(var(--u) * .10 * var(--fit)); max-width: 19em; }
+  h1 { font-size: calc(var(--u) * 2.72 * var(--fit)); line-height: 1.06; max-width: 15em; }
+  h2 { font-size: calc(var(--u) * 1.82 * var(--fit)); line-height: 1.1; margin-bottom: calc(var(--u) * .15 * var(--fit)); max-width: 20em; }
   h3 { font-size: calc(var(--u) * 1.08 * var(--fit)); line-height: 1.1; color: var(--accent); letter-spacing: 0; }
   p, li {
-    font-size: calc(var(--u) * 1.16 * var(--fit));
-    line-height: 1.42; margin: 0;
-    max-width: min(46em, 88%);
+    font-size: calc(var(--u) * 1.30 * var(--fit));
+    line-height: 1.44; margin: 0;
+    max-width: min(43em, 88%);
   }
-  .subtitle { font-size: calc(var(--u) * 1.34 * var(--fit)); color: var(--muted); max-width: 22em; text-wrap: balance; }
-  .author { font-size: calc(var(--u) * 1.22 * var(--fit)); margin-top: calc(var(--u) * .75); color: #fff7e6; }
-  .credit { font-size: calc(var(--u) * 0.74 * var(--fit)); color: var(--muted); max-width: 52em; }
+  .subtitle { font-size: calc(var(--u) * 1.26 * var(--fit)); color: var(--muted); max-width: 24em; text-wrap: balance; }
+  .author { font-size: calc(var(--u) * 1.18 * var(--fit)); margin-top: calc(var(--u) * .7); color: #fff7e6; }
+  .credit { font-size: calc(var(--u) * 0.76 * var(--fit)); color: var(--muted); max-width: 52em; }
   .url { font-size: calc(var(--u) * 0.72 * var(--fit)); color: var(--muted); word-break: break-word; }
   .url a { color: var(--accent); text-decoration: none; }
-  .bigline, .punch { font-size: calc(var(--u) * 1.58 * var(--fit)); line-height: 1.18; font-weight: 720; color: #fff7e6; max-width: 30em; text-wrap: balance; }
+  .bigline, .punch { font-size: calc(var(--u) * 1.42 * var(--fit)); line-height: 1.18; font-weight: 660; color: #fff7e6; max-width: 34em; text-wrap: balance; }
   .punch { margin-top: calc(var(--u) * .6); }
-  .thesis { font-size: calc(var(--u) * 1.5 * var(--fit)); line-height: 1.28; max-width: 24em; }
-  .small { font-size: calc(var(--u) * .85 * var(--fit)); color: var(--muted); max-width: 46em; }
+  .thesis { font-size: calc(var(--u) * 1.38 * var(--fit)); line-height: 1.32; max-width: 29em; }
+  .small { font-size: calc(var(--u) * .92 * var(--fit)); color: var(--muted); max-width: 46em; }
   ul.clean { list-style: none; padding: 0; margin: 0; display: grid; gap: calc(var(--u) * .32 * var(--fit)); }
   ul.clean li::before { content: "•"; color: var(--accent); margin-right: .55em; }
   .artifacts { list-style: none; padding: 0; margin: calc(var(--u) * .3) 0 0; display: grid; gap: calc(var(--u) * .36); }
@@ -113,10 +126,10 @@
     border-radius: calc(var(--u) * .65); padding: calc(var(--u) * .72);
     box-shadow: 0 10px 28px rgba(0,0,0,.12);
   }
-  .artifact-grid div { text-align: center; min-height: calc(var(--u) * 4.2); display: grid; place-items: center; color: #fff7e6; font-weight: 650; font-size: calc(var(--u) * 1.05 * var(--fit)); }
+  .artifact-grid div { text-align: center; min-height: calc(var(--u) * 4.2); display: grid; place-items: center; color: #fff7e6; font-weight: 620; font-size: calc(var(--u) * 1.12 * var(--fit)); }
   .two-col { display: grid; grid-template-columns: 1.05fr .95fr; gap: calc(var(--u) * 1.1); align-items: center; width: 100%; }
   .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(var(--u) * .7); width: 100%; }
-  .card p, .tile p { font-size: calc(var(--u) * .95 * var(--fit)); color: var(--muted); line-height: 1.35; }
+  .card p, .tile p { font-size: calc(var(--u) * 1.02 * var(--fit)); color: var(--muted); line-height: 1.36; }
   .mini { color: var(--muted); font-size: calc(var(--u) * .92 * var(--fit)); }
   .diagram { width: 100%; margin-top: calc(var(--u) * .45); }
   .flow { display: flex; align-items: stretch; gap: calc(var(--u) * .42); }
@@ -156,8 +169,8 @@
 
   @media (min-width: 1100px) and (min-height: 620px) {
     .slide { padding: 4.8% 6.8% 5.2%; }
-    .content { padding-top: calc(var(--u) * 3.4); }
-    p, li { max-width: min(48em, 90%); }
+    .content { padding-top: calc(var(--u) * 2.7); }
+    p, li { max-width: min(44em, 88%); }
     .two-col { gap: calc(var(--u) * 1.5); }
   }
 
@@ -202,7 +215,7 @@
   <p class="author">Sriram Natarajan</p>
   <p class="credit">Drawing on Jason Potts, <em>The University after AI</em>.</p>
   <p class="credit">Developed with assistance from ChatGPT and Grok.</p>
-  <p class="credit">Sources and speaker notes in the companion file.</p>
+  <p class="credit">Sources and speaker notes in companion file.</p>
 </div><div class="pagenum">1</div></section>
 
 <section class="slide" data-index="1" id="s2" aria-label="Slide 2"><div class="content">
@@ -701,7 +714,7 @@
     const h = stage.clientHeight || window.innerHeight;
     const w = stage.clientWidth || window.innerWidth;
     const raw = Math.min(h / 36, w / 64);
-    const maxU = (w >= 1100 && h >= 620) ? 24 : 22;
+    const maxU = (w >= 1100 && h >= 620) ? 25.5 : 22.5;
     stage.style.setProperty('--u', clamp(13.5, raw, maxU) + 'px');
     fitSlide();
   }
