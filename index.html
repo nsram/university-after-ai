@@ -617,6 +617,10 @@
   .contrast-figure { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
   .contrast-figure > div { padding: 24px 28px; border-top: 6px solid var(--accent2); background: rgba(47,111,115,.055); }
   .contrast-figure > div:last-child { border-top-color: var(--accent); background: rgba(154,92,58,.055); }
+  .contrast-conclusion { display:grid; grid-template-columns:1fr 1fr; gap:44px; width:100%; max-width:1320px; margin-top:4px; }
+  .contrast-conclusion span { padding-left:28px; font-size:calc(40px * var(--fit)); line-height:1.18; font-weight:650; }
+  .contrast-conclusion span:first-child { color:var(--accent2); }
+  .contrast-conclusion span:last-child { color:var(--accent); }
   .figure-label { display:block; margin-bottom:10px; color:var(--muted); font-size:22px; text-transform:uppercase; letter-spacing:.07em; font-weight:750; }
   .figure-main { display:block; color:var(--fg); font:600 34px/1.18 "Iowan Old Style", Baskerville, Georgia, serif; }
   .figure-note { display:block; margin-top:12px; color:var(--muted); font-size:23px; line-height:1.3; }
@@ -726,7 +730,7 @@
     <div><span class="figure-label">AI as tutor</span><span class="figure-main">Patient explanation and practice</span><span class="figure-note">The student does the cognitive work.</span></div>
     <div><span class="figure-label">AI as producer</span><span class="figure-main">Polished submission with little learning</span><span class="figure-note">The artifact can hide who did the work.</span></div>
   </div>
-  <p class="bigline">Use AI to learn. Demand stronger evidence.</p>
+  <div class="contrast-conclusion" aria-label="Implications"><span>Use AI to learn.</span><span>Demand stronger evidence.</span></div>
 </div><div class="pagenum">3</div></section>
 
 <section class="slide" data-index="3" id="s4" aria-label="Slide 4"><div class="content">
@@ -799,10 +803,10 @@
 </div><div class="pagenum">11</div></section>
 
 <section class="slide" data-index="11" id="s12" aria-label="Slide 12"><div class="content">
-  <h2>Rock the JVM</h2>
-  <p>The internet also created narrow specialists.</p>
-  <p>A learner can go to Rock the JVM for serious Scala and JVM craft, or to similar shops for one difficult skill.</p>
-  <p>That is valuable. It is still a smaller claim than a degree.</p>
+  <h2>Narrow technical credentials</h2>
+  <p>The tech world offers many narrow certifications and specialist courses.</p>
+  <p>A learner can go to Rock the JVM for serious Scala and JVM craft, or to similar providers for one difficult skill.</p>
+  <p>It is a much smaller claim than a degree.</p>
 </div><div class="pagenum">12</div></section>
 
 <section class="slide" data-index="12" id="s13" aria-label="Slide 13"><div class="content">
@@ -901,7 +905,7 @@
       <h2>Bologna began with students</h2>
       <p>The traditional date is 1088, although no exact founding day is known.</p>
       <p>The Studium grew from informal student associations. Students set teaching goals, monitored their implementation, and paid teachers directly.</p>
-      <p class="bigline">Universities began as organized communities for learning and judgment.</p>
+      <p class="bigline">In one respect, AI points the university back toward its beginnings: a community organized around learning and judgment.</p>
     </div>
     <figure class="bologna-figure">
       <img src="assets/bologna-medieval-lecture.jpg" alt="A medieval lecturer at a raised desk addressing students seated with manuscripts"/>
